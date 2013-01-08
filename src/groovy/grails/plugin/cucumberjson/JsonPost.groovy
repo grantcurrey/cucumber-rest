@@ -1,6 +1,5 @@
 package grails.plugin.cucumberjson
 
-import grails.plugin.cucumber.ConfigReader
 import grails.util.Environment
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
@@ -24,8 +23,7 @@ class JsonPost extends Closure {
         super(theTarget)
         binding = theBinding;
 
-        def configReader = new ConfigReader(new File(CONFIG_PATH), new ConfigSlurper(Environment.TEST.name))
-        configObject = configReader.parse ()
+        configObject = new ConfigSlurper(Environment.TEST.name).parse(new File(CONFIG_PATH).toURL())
     }
 
     protected doCall(Object[] args) {

@@ -12,16 +12,21 @@ grails.project.dependency.resolution = {
         grailsCentral()
     }
 
+    def cucumberVersion = "1.1.1"
+    def httpBuilderVersion = "0.6"
+
     dependencies {
-        compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.6'
+        compile "org.codehaus.groovy.modules.http-builder:http-builder:${httpBuilderVersion}"
+
+        compile("info.cukes:cucumber-groovy:${cucumberVersion}") {
+            excludes 'ant'
+        }
     }
 
     plugins {
-        test ":cucumber:0.7.0"
-
         build(":tomcat:$grailsVersion",
-              ":release:2.0.3",
-              ":rest-client-builder:1.0.2") {
+                ":release:2.0.3",
+                ":rest-client-builder:1.0.2") {
             export = false
         }
     }
