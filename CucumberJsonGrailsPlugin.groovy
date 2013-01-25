@@ -1,7 +1,7 @@
 class CucumberJsonGrailsPlugin {
     def version = "0.1"
     def grailsVersion = "2.1 > *"
-    def dependsOn = [cucumber: "0.7.0 > *"]
+    def dependsOn = [cucumber: "0.5.0 > *"]
     def pluginExcludes = [
             "**/.gitignore",
             "grails-app/**",

@@ -28,17 +28,24 @@ class JsonPost extends Closure {
 
     protected doCall(Object[] args) {
 
-        def http = new HTTPBuilder("${configObject.grails.serverURL}${args[0]}")
-        def jsonRequest = binding.getVariable("jsonRequest");
-        def theBinding = binding;
+        def urlBase = configObject.grails.serverURL ?: System.getProperty("grails.testing.functional.baseUrl")
 
-        http.request(POST, ContentType.JSON) { req ->
-            body = jsonRequest
+        if (!urlBase) {
+            throw new Exception("Unable to find the url grails is running on.  I tried config->grails.serverURL and -Dgrails.testing.functional.baseURL.  Please set one of these variables")
+        } else {
 
-            response.success = { resp, json ->
-                def statusCode = resp.statusLine.statusCode
-                theBinding.setVariable("responseCode", statusCode)
-                theBinding.setVariable("jsonResponse", json)
+            def http = new HTTPBuilder("${urlBase}${args[0]}")
+            def jsonRequest = binding.getVariable("jsonRequest");
+            def theBinding = binding;
+
+            http.request(POST, ContentType.JSON) { req ->
+                body = jsonRequest
+
+                response.success = { resp, json ->
+                    def statusCode = resp.statusLine.statusCode
+                    theBinding.setVariable("responseCode", statusCode)
+                    theBinding.setVariable("jsonResponse", json)
+                }
             }
         }
     }

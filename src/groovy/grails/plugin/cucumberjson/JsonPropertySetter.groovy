@@ -45,7 +45,11 @@ class JsonPropertySetter extends Closure {
     private void set(def parent, def child, def args) {
         def value = args[2]
         if (value.isNumber()) {
-            value = value as Long
+            try {
+                value = value as Long
+            } catch (Exception e) {
+                //If we cant make it a number, just use it as a string
+            }
         }
         parent."$child" = value
     }
