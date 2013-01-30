@@ -74,5 +74,5 @@ Example Scenarios
     Scenario: Some restfull scenario
         Given I am sending a "json message"
         And I set the "property" property to aValue
-        When I post the "json message"
+        When I post the "json message" to someEndpoint/someAction
         And the response property "result" is "OK"
