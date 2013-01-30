@@ -6,6 +6,8 @@ This plugin provides support for writing cucumber functional tests that post to 
 Installation & Configuration
 -------------
 
+### Ensure you have installed the latest version of [grails cucumber plugin](https://github.com/hauner/grails-cucumber)
+
 ### Install the plugin
 
 After you have installed the plugin, there is a script that you can run to auto-configure your application.  The script will execute the steps outlined below so you dont have to.
@@ -20,8 +22,6 @@ The script will do the following
 * Installs EndpointCommon_Steps.groovy into test/cucumber/step_definitions
 
 If you take this approach, you can jump to the last step.
-
-### Ensure you have installed the latest version of [grails cucumber plugin](https://github.com/hauner/grails-cucumber)
 
 ### Register the handler
 
