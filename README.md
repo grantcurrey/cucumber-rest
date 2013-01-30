@@ -66,7 +66,7 @@ Eg, the following dsl:
 
 will look for the following file
 
-`test/cucumber/testMessage.json`
+`test/cucumber/json/testMessage.json`
 
 Example Scenarios
 -----------------
