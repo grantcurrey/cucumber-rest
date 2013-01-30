@@ -1,5 +1,5 @@
-grails-cucumber-json plug
-=========================
+grails-cucumber-json plugin
+===========================
 
 This plugin provides support for writing cucumber functional tests that post to a restfull endpoint.
 
