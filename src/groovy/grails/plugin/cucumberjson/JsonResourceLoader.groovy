@@ -1,6 +1,6 @@
 package grails.plugin.cucumberjson
 
-import grails.converters.JSON
+import com.wotifgroup.cucumber.CucumberJson
 
 /**
  * User: gcurrey
@@ -10,14 +10,14 @@ import grails.converters.JSON
 class JsonResourceLoader extends Closure {
     private static final String JSON_DIR = "test/cucumber/json"
 
-    private final Binding binding;
+    private CucumberJson cucumberJson
 
-    JsonResourceLoader(Object theTarget, Binding theBinding) {
+    JsonResourceLoader(Object theTarget, Binding binding) {
         super(theTarget)
-        binding = theBinding;
+        cucumberJson = new CucumberJson(binding)
     }
 
     protected doCall(Object[] args) {
-        binding.setVariable("jsonRequest", JSON.parse(FileUtil.loadFileResource(args[0].toString(), JSON_DIR)));
+        cucumberJson.loadJsonRequest(args[0] as String, JSON_DIR)
     }
 }

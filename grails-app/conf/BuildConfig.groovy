@@ -10,8 +10,8 @@ grails.project.dependency.resolution = {
 
     repositories {
         inherits true // Whether to inherit repository definitions from plugins
-        mavenLocal()
-        mavenRepo "http://maven.dev.wotifgroup.com/content/groups/public/"
+        /*mavenLocal()
+        mavenRepo "http://maven.dev.wotifgroup.com/content/groups/public/"*/
         grailsCentral()
     }
 
