@@ -5,20 +5,22 @@ package com.wotifgroup.cucumber
  * Date: 19/06/12
  * Time: 11:29 AM
  */
-class JsonPost extends Closure {
+class JsonAction extends Closure {
     def urlBase = System.getProperty("testing.functional.baseUrl")
     private CucumberJson cucumberJson
+    private String action
 
-    JsonPost(Object theTarget, Binding binding) {
+    JsonAction(String action, Object theTarget, Binding binding) {
         super(theTarget)
         cucumberJson = new CucumberJson(binding)
+        this.action = action
     }
 
     protected doCall(Object[] args) {
         if (!urlBase) {
-            throw new Exception("Unable to determine the base url to post to.  Currently urlBase is [${urlBase}].  Either set this on JsonPost or set -Dtesting.functional.baseUrl")
+            throw new Exception("Unable to determine the base url to post to.  Currently urlBase is [${urlBase}].  Either set this on JsonAction or set -Dtesting.functional.baseUrl")
         } else {
-            cucumberJson.postJsonRequest(urlBase, args[0])
+            cucumberJson.doJsonRequest(action, urlBase, args[0])
         }
     }
 

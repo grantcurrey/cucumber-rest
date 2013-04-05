@@ -9,7 +9,7 @@ import org.codehaus.groovy.grails.web.json.JSONArray
 
 import java.security.KeyStore
 
-import static groovyx.net.http.Method.POST
+import static groovyx.net.http.Method.*
 
 class CucumberJson {
 
@@ -45,7 +45,7 @@ class CucumberJson {
         }
     }
 
-    public void postJsonRequest(def urlBase, def path) {
+    public void doJsonRequest(def methodString, def urlBase, def path) {
         def http = new HTTPBuilder("${urlBase}${path}")
 
         if (keyStore && trustStore) {
@@ -54,16 +54,26 @@ class CucumberJson {
             http.client.connectionManager.schemeRegistry.register(new Scheme("https", factory, 443))
         }
 
-        def jsonRequest = binding.getVariable(JSON_REQUEST_VARIABLE);
-        def theBinding = binding;
+        def method = POST
+        if (methodString == "post") {
+            method = POST
+        } else if (methodString == "put") {
+            method = PUT
+        } else if (methodString == "delete") {
+            method = DELETE
+        } else if (methodString == "get") {
+            method == GET
+        }
 
-        http.request(POST, ContentType.JSON) { req ->
-            body = jsonRequest
+        http.request(method, ContentType.JSON) { req ->
+            if (method == POST || method == PUT) {
+                body = binding.getVariable(JSON_REQUEST_VARIABLE);
+            }
 
             response.success = { resp, json ->
                 def statusCode = resp.statusLine.statusCode
-                theBinding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
-                theBinding.setVariable(JSON_RESPONSE_VARIABLE, json)
+                binding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
+                binding.setVariable(JSON_RESPONSE_VARIABLE, json)
             }
         }
     }
