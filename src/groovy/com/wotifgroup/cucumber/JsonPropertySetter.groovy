@@ -1,6 +1,4 @@
-package grails.plugin.cucumberjson
-
-import com.wotifgroup.cucumber.CucumberJson
+package com.wotifgroup.cucumber
 
 /**
  * User: gcurrey

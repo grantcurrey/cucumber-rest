@@ -16,7 +16,7 @@ grails.project.dependency.resolution = {
     }
 
     def cucumberVersion = "1.1.1"
-    def httpBuilderVersion = "0.5.0"
+    def httpBuilderVersion = "0.6"
 
     dependencies {
         compile("org.codehaus.groovy.modules.http-builder:http-builder:${httpBuilderVersion}") {

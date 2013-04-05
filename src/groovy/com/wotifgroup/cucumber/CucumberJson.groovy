@@ -1,10 +1,13 @@
 package com.wotifgroup.cucumber
 
-import grails.plugin.cucumberjson.FileUtil
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
+import org.apache.http.conn.scheme.Scheme
+import org.apache.http.conn.ssl.SSLSocketFactory
 import org.codehaus.groovy.grails.web.json.JSONArray
+
+import java.security.KeyStore
 
 import static groovyx.net.http.Method.POST
 
@@ -14,14 +17,43 @@ class CucumberJson {
     static final JSON_RESPONSE_CODE_VARIABLE = "responseCode"
     static final JSON_RESPONSE_VARIABLE = "jsonResponse"
 
+    private def keyStore
+    private def trustStore
+    private def keyStorePassword
+
     private Binding binding
 
     public CucumberJson(Binding binding) {
         this.binding = binding
     }
 
+    public void initializeSSL(String keyStoreFile, String trustStoreFile, String keyStorePassword, String trustStorePassword) {
+        if (keyStoreFile) {
+            keyStore = KeyStore.getInstance(KeyStore.defaultType)
+
+            getClass().getResource(keyStoreFile).withInputStream {
+                keyStore.load(it, keyStorePassword.toCharArray())
+            }
+            this.keyStorePassword = keyStorePassword
+        }
+
+        if (trustStoreFile) {
+            trustStore = KeyStore.getInstance(KeyStore.defaultType)
+            getClass().getResource(trustStoreFile).withInputStream {
+                trustStore.load(it, trustStorePassword.toCharArray())
+            }
+        }
+    }
+
     public void postJsonRequest(def urlBase, def path) {
         def http = new HTTPBuilder("${urlBase}${path}")
+
+        if (keyStore && trustStore) {
+            def factory = new SSLSocketFactory(keyStore, keyStorePassword, trustStore)
+            factory.hostnameVerifier = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
+            http.client.connectionManager.schemeRegistry.register(new Scheme("https", factory, 443))
+        }
+
         def jsonRequest = binding.getVariable(JSON_REQUEST_VARIABLE);
         def theBinding = binding;
 
@@ -78,15 +110,15 @@ class CucumberJson {
         parent."$child" = value
     }
 
-    private void clear(def parent, def child, def value=null) {
+    private void clear(def parent, def child, def value = null) {
         parent."$child" = ""
     }
 
-    private void remove(def parent, def child, def value=null) {
+    private void remove(def parent, def child, def value = null) {
         parent.remove(child)
     }
 
-    private void nullify(def parent, def child, def value=null) {
+    private void nullify(def parent, def child, def value = null) {
         parent."$child" = null
     }
 

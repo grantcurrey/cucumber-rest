@@ -1,4 +1,4 @@
-package grails.plugin.cucumberjson
+package com.wotifgroup.cucumber
 
 import cucumber.runtime.io.FileResourceLoader
 

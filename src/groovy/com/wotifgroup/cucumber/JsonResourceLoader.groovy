@@ -1,6 +1,4 @@
-package grails.plugin.cucumberjson
-
-import com.wotifgroup.cucumber.CucumberJson
+package com.wotifgroup.cucumber
 
 /**
  * User: gcurrey
@@ -8,7 +6,7 @@ import com.wotifgroup.cucumber.CucumberJson
  * Time: 5:05 PM
  */
 class JsonResourceLoader extends Closure {
-    private static final String JSON_DIR = "test/cucumber/json"
+    String jsonDirectory = "src/test/resources/json"
 
     private CucumberJson cucumberJson
 
@@ -18,6 +16,6 @@ class JsonResourceLoader extends Closure {
     }
 
     protected doCall(Object[] args) {
-        cucumberJson.loadJsonRequest(args[0] as String, JSON_DIR)
+        cucumberJson.loadJsonRequest(jsonDirectory, args[0] as String)
     }
 }
