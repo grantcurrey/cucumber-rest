@@ -13,10 +13,8 @@ class EndpointBindingUpdater {
 
     def jsonResourceLoader
     def jsonPropertySetter
-    def jsonPost
-    def jsonPut
-    def jsonDelete
-    def jsonGet
+
+    def httpActions = []
 
     EndpointBindingUpdater(Binding binding) {
         this.binding = binding
@@ -25,28 +23,39 @@ class EndpointBindingUpdater {
     EndpointBindingUpdater remove() {
         binding.variables.remove(LOAD)
         binding.variables.remove(SET_JSON_PROPERTY)
-        binding.variables.remove(POST)
-        binding.variables.remove(PUT)
-        binding.variables.remove(DELETE)
-        binding.variables.remove(GET)
+
+        [POST, PUT, DELETE, GET].each { value ->
+            binding.variables.remove(value)
+        }
+
         this
     }
 
     EndpointBindingUpdater initialize() {
         jsonResourceLoader = new JsonResourceLoader(this, binding)
         jsonPropertySetter = new JsonPropertySetter(this, binding)
-        jsonPost = new JsonAction("post", this, binding)
-        jsonPut = new JsonAction("put", this, binding)
-        jsonGet = new JsonAction("get", this, binding)
-        jsonDelete = new JsonAction("delete", this, binding)
+
+        [POST, PUT, DELETE, GET].each { value ->
+            def action = new JsonAction(value, this, binding)
+            httpActions.add(action)
+            binding.setVariable(value, action)
+        }
 
         binding.setVariable(LOAD, jsonResourceLoader)
         binding.setVariable(SET_JSON_PROPERTY, jsonPropertySetter)
-        binding.setVariable(POST, jsonPost)
-        binding.setVariable(PUT, jsonPut)
-        binding.setVariable(GET, jsonGet)
-        binding.setVariable(DELETE, jsonDelete)
 
         this
+    }
+
+    public void setBaseUrl(String url) {
+        httpActions.each { JsonAction action ->
+            action.setUrlBase(url)
+        }
+    }
+
+    public void setSSLDetails(String trustStoreFile, String trustStorePassword = null, String keyStoreFile = null, String keyStorePassword = null) {
+        httpActions.each { JsonAction action ->
+            action.setSSLDetails(trustStoreFile, trustStorePassword, keyStoreFile, keyStorePassword)
+        }
     }
 }
