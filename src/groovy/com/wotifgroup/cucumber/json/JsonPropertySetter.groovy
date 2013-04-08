@@ -1,4 +1,4 @@
-package com.wotifgroup.cucumber
+package com.wotifgroup.cucumber.json
 
 /**
  * User: gcurrey
@@ -8,9 +8,9 @@ package com.wotifgroup.cucumber
 class JsonPropertySetter extends Closure {
     private CucumberJson cucumberJson
 
-    JsonPropertySetter(Object theTarget, Binding binding) {
+    JsonPropertySetter(Object theTarget, CucumberJson cucumberJson) {
         super(theTarget)
-        cucumberJson = new CucumberJson(binding)
+        this.cucumberJson = cucumberJson
     }
 
     protected doCall(Object[] args) {

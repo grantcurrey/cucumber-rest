@@ -1,4 +1,4 @@
-package com.wotifgroup.cucumber
+package com.wotifgroup.cucumber.json
 
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
@@ -28,6 +28,11 @@ class CucumberJson {
     }
 
     public void initializeSSL(String keyStoreFile, String trustStoreFile, String keyStorePassword, String trustStorePassword) {
+        initializeSSLKeystore(keyStoreFile, keyStorePassword)
+        initializeSSLTruststore(trustStoreFile, trustStorePassword)
+    }
+
+    public void initializeSSLKeystore(String keyStoreFile, String keyStorePassword) {
         if (keyStoreFile) {
             keyStore = KeyStore.getInstance(KeyStore.defaultType)
 
@@ -36,7 +41,9 @@ class CucumberJson {
             }
             this.keyStorePassword = keyStorePassword
         }
+    }
 
+    public void initializeSSLTruststore(String trustStoreFile, trustStorePassword) {
         if (trustStoreFile) {
             trustStore = KeyStore.getInstance(KeyStore.defaultType)
             getClass().getResource(trustStoreFile).withInputStream {
@@ -74,6 +81,11 @@ class CucumberJson {
                 def statusCode = resp.statusLine.statusCode
                 binding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
                 binding.setVariable(JSON_RESPONSE_VARIABLE, json)
+            }
+
+            response.failure = { resp ->
+                def statusCode = resp.statusLine.statusCode
+                binding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
             }
         }
     }

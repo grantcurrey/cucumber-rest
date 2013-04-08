@@ -1,4 +1,4 @@
-package com.wotifgroup.cucumber
+package com.wotifgroup.cucumber.json
 
 /**
  * User: gcurrey
@@ -10,9 +10,9 @@ class JsonAction extends Closure {
     private CucumberJson cucumberJson
     private String action
 
-    JsonAction(String action, Object theTarget, Binding binding) {
+    JsonAction(String action, Object theTarget, CucumberJson cucumberJson) {
         super(theTarget)
-        cucumberJson = new CucumberJson(binding)
+        this.cucumberJson = cucumberJson
         this.action = action
     }
 
@@ -26,9 +26,5 @@ class JsonAction extends Closure {
 
     public void setUrlBase(String urlBase){
         this.urlBase = urlBase
-    }
-
-    public void setSSLDetails(String trustStoreFile, String trustStorePassword = null, String keyStoreFile = null, String keyStorePassword = null){
-        this.cucumberJson.initializeSSL(keyStoreFile, trustStoreFile, keyStorePassword, trustStorePassword)
     }
 }

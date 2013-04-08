@@ -3,7 +3,31 @@ grails-cucumber-json plugin
 
 This plugin provides support for writing cucumber functional tests that post to a restfull endpoint.
 
-Installation & Configuration
+There is now support for both cucumber-jvm standalone, and cucumber-jvm via a grails plugin.
+
+Installation & Configuration - Standalone
+-------------
+
+This operates as a standard java library, so no special installation instructions exist other than adding the required library to your classpath.
+
+### Register the Handler
+
+In one of your glue files (step files), include the following code block:
+
+    def endpointBinding = new EndpointBindingUpdater(binding)
+    endpointBinding.initialize()
+    endpointBinding.setBaseUrl("https://your-base-url")
+
+    //If you need to provide keystore & truststore files for ssl, you can set them here.  Note, keystore & truststore are classpath locations
+    endpointBinding.setSSLDetails(keystore,keystore-password,truststore,truststore-password)
+
+### Install Step Definitions
+
+The standalone library ships with JsonCommonSteps.groovy which is a step definition file.  This should be included in your glue path:
+
+    @Cucumber.Options(glue={"src/test/feature/steps","classpath:com/wotifgroup/cucumber/glue"})
+
+Installation & Configuration - GRAILS
 -------------
 
 ### Ensure you have installed the latest version of [grails cucumber plugin](https://github.com/hauner/grails-cucumber)
@@ -51,8 +75,8 @@ The step definitions provide the following cucumber dsl's which can be used in a
 * I am sending a "(.*)"
 * I set the "(.*)" property to (.*)
 * I (remove|clear|nullify) the "(.*)" property
-* I post the "([\w ]+)
-* I post the "([\w ]+)" to (.*)
+* I post|delete|put|get the "([\w ]+)
+* I post|delete|put|get the "([\w ]+)" to (.*)
 * the response property "(.*)" is "(.*)"
 
 ### Install your example JSON file to post

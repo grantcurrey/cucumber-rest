@@ -1,4 +1,4 @@
-package com.wotifgroup.cucumber
+package com.wotifgroup.cucumber.json
 
 class EndpointBindingUpdater {
 
@@ -11,6 +11,8 @@ class EndpointBindingUpdater {
 
     Binding binding
 
+    CucumberJson cucumberJson
+
     def jsonResourceLoader
     def jsonPropertySetter
 
@@ -18,6 +20,8 @@ class EndpointBindingUpdater {
 
     EndpointBindingUpdater(Binding binding) {
         this.binding = binding
+        this.binding.setVariable("jsonBindingUpdater", this)
+        this.cucumberJson = new CucumberJson(binding)
     }
 
     EndpointBindingUpdater remove() {
@@ -28,22 +32,22 @@ class EndpointBindingUpdater {
             binding.variables.remove(value)
         }
 
+        binding.variables.remove("jsonBindingUpdater")
         this
     }
 
     EndpointBindingUpdater initialize() {
-        jsonResourceLoader = new JsonResourceLoader(this, binding)
-        jsonPropertySetter = new JsonPropertySetter(this, binding)
+        jsonResourceLoader = new JsonResourceLoader(this, cucumberJson)
+        jsonPropertySetter = new JsonPropertySetter(this, cucumberJson)
 
         [POST, PUT, DELETE, GET].each { value ->
-            def action = new JsonAction(value, this, binding)
+            def action = new JsonAction(value, this, cucumberJson)
             httpActions.add(action)
             binding.setVariable(value, action)
         }
 
         binding.setVariable(LOAD, jsonResourceLoader)
         binding.setVariable(SET_JSON_PROPERTY, jsonPropertySetter)
-
         this
     }
 
@@ -54,8 +58,12 @@ class EndpointBindingUpdater {
     }
 
     public void setSSLDetails(String trustStoreFile, String trustStorePassword = null, String keyStoreFile = null, String keyStorePassword = null) {
-        httpActions.each { JsonAction action ->
-            action.setSSLDetails(trustStoreFile, trustStorePassword, keyStoreFile, keyStorePassword)
+        if (trustStoreFile) {
+            cucumberJson.initializeSSLTruststore(trustStoreFile, trustStorePassword)
+        }
+
+        if (keyStoreFile) {
+            cucumberJson.initializeSSLKeystore(keyStoreFile, keyStorePassword)
         }
     }
 }
