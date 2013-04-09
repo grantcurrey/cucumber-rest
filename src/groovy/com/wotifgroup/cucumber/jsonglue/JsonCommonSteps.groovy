@@ -47,6 +47,10 @@ Then(~/^I delete the "([\w ]+)" to "(.*)"/) { String type, String resource ->
     delete resource
 }
 
+Then(~/^The http response code is "([0-9]*)"/) { int code ->
+    assert (responseCode as Integer == code as Integer)
+}
+
 Then(~'^the response property \"(.*)\" is \"(.*)\"$') { String property, String value ->
     def parent = jsonResponse
 

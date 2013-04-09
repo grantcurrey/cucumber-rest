@@ -83,9 +83,10 @@ class CucumberJson {
                 binding.setVariable(JSON_RESPONSE_VARIABLE, json)
             }
 
-            response.failure = { resp ->
+            response.failure = { resp, json ->
                 def statusCode = resp.statusLine.statusCode
                 binding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
+                binding.setVariable(JSON_RESPONSE_VARIABLE, json)
             }
         }
     }
