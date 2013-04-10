@@ -8,11 +8,11 @@ Given(~/^The base url is \"(.*)\"/) { String url ->
 }
 
 Given(~/^The ssl keystore is \"(.*)\" and the keystore password is \"(.*)\"/) { String keystore, String password ->
-    jsonBindingUpdater.setSSLDetails(null,null,keystore,password)
+    jsonBindingUpdater.setSSLDetails(null, null, keystore, password)
 }
 
 Given(~/^The ssl truststore is \"(.*)\" and the truststore password is \"(.*)\"/) { String truststore, String password ->
-    jsonBindingUpdater.setSSLDetails(truststore,password,null,null)
+    jsonBindingUpdater.setSSLDetails(truststore, password, null, null)
 }
 
 Given(~'^I am sending a \"(.*)\"$') { String json ->
@@ -61,6 +61,14 @@ Then(~'^the response property \"(.*)\" is \"(.*)\"$') { String property, String 
             parent = parent."${m[0][1]}"[m[0][2] as Integer]
         } else {
             parent = parent."$pathPart"
+        }
+    }
+
+    if (value.isNumber()) {
+        try {
+            value = value as Long
+        } catch (Exception e) {
+            //If we cant make it a number, just use it as a string
         }
     }
 
