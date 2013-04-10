@@ -54,9 +54,9 @@ Then(~/^The http response code is "([0-9]*)"/) { int code ->
 }
 
 Then(~'^the response property \"(.*)\" is \"(.*)\"$') { String property, String value ->
-    def parent = jsonResponse
-
-    parent = CucumberJson.parseJsonExpression(property.split("\\."), parent)
+    path = property.split("\\.")
+    child = path[-1]
+    parent = CucumberJson.parseJsonExpression(path, jsonResponse)
 
     if (value.isNumber()) {
         try {
@@ -66,5 +66,5 @@ Then(~'^the response property \"(.*)\" is \"(.*)\"$') { String property, String 
         }
     }
 
-    assert (parent == value)
+    assert (parent."$child" == value)
 }
