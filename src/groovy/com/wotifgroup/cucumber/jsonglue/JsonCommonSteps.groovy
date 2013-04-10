@@ -1,5 +1,7 @@
 package com.wotifgroup.cucumber.jsonglue
 
+import com.wotifgroup.cucumber.json.CucumberJson
+
 import static cucumber.api.groovy.EN.Given
 import static cucumber.api.groovy.EN.Then
 
@@ -54,15 +56,7 @@ Then(~/^The http response code is "([0-9]*)"/) { int code ->
 Then(~'^the response property \"(.*)\" is \"(.*)\"$') { String property, String value ->
     def parent = jsonResponse
 
-    String[] path = property.split("\\.")
-    path[0..<path.length].each { String pathPart ->
-        def m = pathPart =~ /(.*)\[([0-9]*)\]/
-        if (m) {
-            parent = parent."${m[0][1]}"[m[0][2] as Integer]
-        } else {
-            parent = parent."$pathPart"
-        }
-    }
+    parent = CucumberJson.parseJsonExpression(property.split("\\."), parent)
 
     if (value.isNumber()) {
         try {

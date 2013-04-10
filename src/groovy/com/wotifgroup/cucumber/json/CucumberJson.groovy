@@ -105,7 +105,7 @@ class CucumberJson {
         this."${action}"(parent, child, value)
     }
 
-    private def parseJsonExpression(String[] path, parent) {
+    public static def parseJsonExpression(String[] path, parent) {
         path[0..<path.length - 1].each { String pathPart ->
             def m = pathPart =~ /(.*)\[([0-9]*)\]/
             if (m) {
