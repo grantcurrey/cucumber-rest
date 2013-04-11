@@ -49,7 +49,7 @@ Then(~/^I delete the "([\w ]+)" to "(.*)"/) { String type, String resource ->
     delete resource
 }
 
-Then(~/^The http response code is "([0-9]*)"/) { int code ->
+Then(~/^the http response code is "([0-9]*)"/) { int code ->
     assert (responseCode as Integer == code as Integer)
 }
 
