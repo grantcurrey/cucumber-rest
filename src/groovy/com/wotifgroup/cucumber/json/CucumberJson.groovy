@@ -95,7 +95,7 @@ class CucumberJson {
         binding.setVariable(JSON_REQUEST_VARIABLE, new JsonSlurper().parseText(FileUtil.loadFileResource(name, directory)));
     }
 
-    public void setJsonProperty(String action, String path, def value) {
+    public void setJsonProperty(String action, String path, String value) {
         String[] pathParts = path.split("\\.")
         def json = binding.getVariable(JSON_REQUEST_VARIABLE)
 
@@ -122,15 +122,22 @@ class CucumberJson {
         return parent
     }
 
-    private void set(def parent, def child, def value) {
-        if (value.isNumber()) {
-            try {
-                value = value as Long
-            } catch (Exception e) {
-                //If we cant make it a number, just use it as a string
+    public static def parseStringToType(String value) {
+        if (value.startsWith("\"") && value.endsWith("\"")) {
+            return value.substring(1, value.length() - 1)
+        } else if (!value.isNumber()){
+            return value
+        } else {
+            if (value.contains(".")) {
+                return value as Float
+            } else {
+                return value as Long
             }
         }
-        parent."$child" = value
+    }
+
+    private void set(def parent, def child, String value) {
+        parent."$child" = parseStringToType(value)
     }
 
     private void clear(def parent, def child, def value = null) {
@@ -145,13 +152,13 @@ class CucumberJson {
         parent."$child" = null
     }
 
-    private void add(def parent, def child, def value) {
+    private void add(def parent, def child, String value) {
         if (parent."$child" == null) {
             parent."$child" = new JSONArray()
         }
 
         if (parent."$child" instanceof List) {
-            parent."$child".add(value)
+            parent."$child".add(parseStringToType(value))
         }
     }
 }
