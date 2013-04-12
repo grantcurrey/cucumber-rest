@@ -3,6 +3,7 @@ package com.wotifgroup.cucumber.json
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.ResponseParseException
 import org.apache.http.conn.scheme.Scheme
 import org.apache.http.conn.ssl.SSLSocketFactory
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -72,22 +73,26 @@ class CucumberJson {
             method == GET
         }
 
-        http.request(method, ContentType.JSON) { req ->
-            if (method == POST || method == PUT) {
-                body = binding.getVariable(JSON_REQUEST_VARIABLE);
-            }
+        try {
+            http.request(method, ContentType.JSON) { req ->
+                if (method == POST || method == PUT) {
+                    body = binding.getVariable(JSON_REQUEST_VARIABLE);
+                }
 
-            response.success = { resp, json ->
-                def statusCode = resp.statusLine.statusCode
-                binding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
-                binding.setVariable(JSON_RESPONSE_VARIABLE, json)
-            }
+                response.success = { resp, json ->
+                    def statusCode = resp.statusLine.statusCode
+                    binding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
+                    binding.setVariable(JSON_RESPONSE_VARIABLE, json)
+                }
 
-            response.failure = { resp, json ->
-                def statusCode = resp.statusLine.statusCode
-                binding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
-                binding.setVariable(JSON_RESPONSE_VARIABLE, json)
+                response.failure = { resp, json ->
+                    def statusCode = resp.statusLine.statusCode
+                    binding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
+                    binding.setVariable(JSON_RESPONSE_VARIABLE, json)
+                }
             }
+        } catch (ResponseParseException e) {
+            throw new Exception ("Unable to ")
         }
     }
 
@@ -99,7 +104,7 @@ class CucumberJson {
         String[] pathParts = path.split("\\.")
         def json = binding.getVariable(JSON_REQUEST_VARIABLE)
 
-        def child = path[-1]
+        def child = pathParts[-1]
         def parent = parseJsonExpression(pathParts, json)
 
         this."${action}"(parent, child, value)
@@ -125,7 +130,7 @@ class CucumberJson {
     public static def parseStringToType(String value) {
         if (value.startsWith("\"") && value.endsWith("\"")) {
             return value.substring(1, value.length() - 1)
-        } else if (!value.isNumber()){
+        } else if (!value.isNumber()) {
             return value
         } else {
             if (value.contains(".")) {
