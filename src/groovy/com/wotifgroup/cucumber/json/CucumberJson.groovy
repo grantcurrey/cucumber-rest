@@ -132,6 +132,12 @@ class CucumberJson {
             return value.substring(1, value.length() - 1)
         } else if (!value.isNumber()) {
             return value
+        } else if (value == "today") {
+            return new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        } else if (value == "tomorrow") {
+            return (new Date() + 1).format("yyyy-MM-dd'T'HH:mm:ssZ")
+        } else if (value == "yesterday") {
+            return (new Date() - 1).format("yyyy-MM-dd'T'HH:mm:ssZ")
         } else {
             if (value.contains(".")) {
                 return value as Float
