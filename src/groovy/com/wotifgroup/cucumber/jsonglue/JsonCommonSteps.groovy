@@ -5,6 +5,10 @@ import com.wotifgroup.cucumber.json.CucumberJson
 import static cucumber.api.groovy.EN.Given
 import static cucumber.api.groovy.EN.Then
 
+Given(~/^the date format is "(.*)"/) { String format ->
+
+}
+
 Given(~/^the base url is \"(.*)\"/) { String url ->
     jsonBindingUpdater.setBaseUrl(url)
 }
@@ -21,15 +25,15 @@ Given(~'^I am sending a \"(.*)\"$') { String json ->
     load json.replace(" ", "_") + ".json"
 }
 
-Given(~'^I set the \"(.*)\" property to (.*)$') { String property, String value ->
+Given(~'^I set the request \"(.*)\" property to (.*)$') { String property, String value ->
     setJsonProperty "set", property, value
 }
 
-Given(~'^I add \"(.*)\" to the \"(.*)\" property$') { String value, String property ->
+Given(~'^I add \"(.*)\" to the request \"(.*)\" property$') { String value, String property ->
     setJsonProperty "add", property, value
 }
 
-Given(~'^I (remove|clear|nullify) the \"(.*)\" property$') { String action, String property ->
+Given(~'^I (remove|clear|nullify) the request \"(.*)\" property$') { String action, String property ->
     setJsonProperty action, property
 }
 

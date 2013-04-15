@@ -51,6 +51,10 @@ class EndpointBindingUpdater {
         this
     }
 
+    public void setDateFormat(String dateFormat){
+        cucumberJson.dateFormat = dateFormat
+    }
+
     public void setBaseUrl(String url) {
         httpActions.each { JsonAction action ->
             action.setUrlBase(url)

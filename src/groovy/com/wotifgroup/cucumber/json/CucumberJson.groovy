@@ -22,6 +22,8 @@ class CucumberJson {
     private def trustStore
     private def keyStorePassword
 
+    String dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+
     private Binding binding
 
     public CucumberJson(Binding binding) {
@@ -92,7 +94,7 @@ class CucumberJson {
                 }
             }
         } catch (ResponseParseException e) {
-            throw new Exception ("Unable to ")
+            throw new Exception("Unable to ")
         }
     }
 
@@ -127,17 +129,17 @@ class CucumberJson {
         return parent
     }
 
-    public static def parseStringToType(String value) {
+    public static def parseStringToType(String value, String dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ") {
         if (value.startsWith("\"") && value.endsWith("\"")) {
             return value.substring(1, value.length() - 1)
+        } else if (value == "today") {
+            return new Date().format(dateFormat)
+        } else if (value == "tomorrow") {
+            return (new Date() + 1).format(dateFormat)
+        } else if (value == "yesterday") {
+            return (new Date() - 1).format(dateFormat)
         } else if (!value.isNumber()) {
             return value
-        } else if (value == "today") {
-            return new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        } else if (value == "tomorrow") {
-            return (new Date() + 1).format("yyyy-MM-dd'T'HH:mm:ssZ")
-        } else if (value == "yesterday") {
-            return (new Date() - 1).format("yyyy-MM-dd'T'HH:mm:ssZ")
         } else {
             if (value.contains(".")) {
                 return value as Float
@@ -148,7 +150,7 @@ class CucumberJson {
     }
 
     private void set(def parent, def child, String value) {
-        parent."$child" = parseStringToType(value)
+        parent."$child" = parseStringToType(value, dateFormat)
     }
 
     private void clear(def parent, def child, def value = null) {
