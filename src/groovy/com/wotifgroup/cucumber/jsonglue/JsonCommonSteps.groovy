@@ -6,7 +6,7 @@ import static cucumber.api.groovy.EN.Given
 import static cucumber.api.groovy.EN.Then
 
 Given(~/^the date format is "(.*)"/) { String format ->
-
+    jsonBindingUpdater.setDateFormat(format)
 }
 
 Given(~/^the base url is \"(.*)\"/) { String url ->
