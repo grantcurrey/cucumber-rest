@@ -62,5 +62,5 @@ Then(~'^the response property \"(.*)\" is (\"?.*\"?)$') { String property, Strin
     child = path[-1]
     parent = CucumberJson.parseJsonExpression(path, jsonResponse)
 
-    assert (parent."$child" == CucumberJson.parseStringToType(value))
+    assert (parent."$child" == CucumberJson.parseStringToType(value, jsonBindingUpdater.getDateFormat()))
 }

@@ -133,11 +133,11 @@ class CucumberJson {
         if (value.startsWith("\"") && value.endsWith("\"")) {
             return value.substring(1, value.length() - 1)
         } else if (value == "today") {
-            return new Date().format(dateFormat)
+            return new Date().clearTime().format(dateFormat)
         } else if (value == "tomorrow") {
-            return (new Date() + 1).format(dateFormat)
+            return (new Date() + 1).clearTime().format(dateFormat)
         } else if (value == "yesterday") {
-            return (new Date() - 1).format(dateFormat)
+            return (new Date() - 1).clearTime().format(dateFormat)
         } else if (!value.isNumber()) {
             return value
         } else {

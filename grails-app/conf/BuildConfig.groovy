@@ -26,6 +26,8 @@ grails.project.dependency.resolution = {
             exclude "nekohtml"
         }
 
+        compile("")
+
         provided("info.cukes:cucumber-groovy:${cucumberVersion}") {
             excludes 'ant'
         }
