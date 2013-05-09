@@ -138,6 +138,8 @@ class CucumberJson {
             return (new Date() + 1).clearTime().format(dateFormat)
         } else if (value == "yesterday") {
             return (new Date() - 1).clearTime().format(dateFormat)
+        } else if (value == "random") {
+            return UUID.randomUUID() as String
         } else if (!value.isNumber()) {
             return value
         } else {
