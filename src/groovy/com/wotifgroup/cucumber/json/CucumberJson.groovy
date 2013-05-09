@@ -72,7 +72,7 @@ class CucumberJson {
         } else if (methodString == "delete") {
             method = DELETE
         } else if (methodString == "get") {
-            method == GET
+            method = GET
         }
 
         try {
