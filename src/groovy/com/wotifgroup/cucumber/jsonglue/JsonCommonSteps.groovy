@@ -57,18 +57,14 @@ Then(~/^the http response code is "([0-9]*)"/) { int code ->
     assert (responseCode as Integer == code as Integer)
 }
 
-Then(~'^the response property \"(.*)\" is (\"?.*\"?)$') { String property, String value ->
+Then(~'^the response property \"(.*)\" (is|contains) (\"?.*\"?)$') { String property, String operator, String value ->
     path = property.split("\\.")
     child = path[-1]
     parent = CucumberJson.parseJsonExpression(path, jsonResponse)
 
-    assert (parent."$child" == CucumberJson.parseStringToType(value, jsonBindingUpdater.getDateFormat()))
-}
-
-Then(~/^the response property "(.*)" contains "(.*)"$/) { String property, String value ->
-    path = property.split("\\.")
-    child = path[-1]
-    parent = CucumberJson.parseJsonExpression(path, jsonResponse)
-
-    assert String.valueOf(parent."$child").contains(value)
+    if (operator == "is") {
+        assert (parent."$child" == CucumberJson.parseStringToType(value, jsonBindingUpdater.getDateFormat()))
+    } else {
+        assert String.valueOf(parent."$child").contains(value)
+    }
 }
