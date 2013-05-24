@@ -81,7 +81,7 @@ Then(~'^the response property \"(.*)\" is (\"?.*\"?)$') { String property, Strin
     assert (parent."$child" == CucumberJson.parseStringToType(value, jsonBindingUpdater.getDateFormat()))
 }
 
-Then(~'^the response property \"(.*)\" contains (\"?.*\"?)$') { String property, String value ->
+Then(~'^the response property \"(.*)\" contains \"?(.*)\"?$') { String property, String value ->
     path = property.split("\\.")
     child = path[-1]
     parent = CucumberJson.parseJsonExpression(path, jsonResponse)
