@@ -1,7 +1,7 @@
 grails-cucumber-json plugin
 ===========================
 
-This plugin provides support for writing cucumber functional tests that post to a restfull endpoint.
+This plugin provides support for writing cucumber functional tests that post to a restful endpoint.
 
 There is now support for both cucumber-jvm standalone, and cucumber-jvm via a grails plugin.
 
@@ -50,7 +50,7 @@ If you take this approach, you can jump to the last step.
 ### Register the handler
 
 Edit support/env.groovy (required for the cucumber-json plugin) and add the following snippet.
-This sets up up a handler for all functional tests that are tagged as @endpoint.  You could of course change
+This sets up up a handler for all functional tests that are tagged as @endpoint.  You could of course change:
 
     Before("@endpoint") {
         bindingUpdater = new EndpointBindingUpdater(binding);
@@ -95,7 +95,7 @@ will look for the following file
 Example Scenarios
 -----------------
 
-    Scenario: Some restfull scenario
+    Scenario: Some restful scenario
         Given I am sending a "json message"
         And I set the "property" property to aValue
         When I post the "json message" to someEndpoint/someAction
