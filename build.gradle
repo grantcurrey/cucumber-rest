@@ -1,0 +1,37 @@
+apply plugin: 'eclipse'
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.0.5'
+	
+	compile("org.codehaus.groovy.modules.http-builder:http-builder:0.6") {
+            exclude module: "xml-apis"
+            exclude module: "groovy"
+            exclude module: "nekohtml"
+	}
+
+	compile("info.cukes:cucumber-groovy:1.1.1") {
+            exclude module: "ant"
+	}
+
+    compile("org.grails:grails-core:2.2.3")
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src/groovy']
+        }
+    }
+
+    test {
+        groovy {
+            srcDirs = ['test/groovy']
+        }
+    }
+}
+

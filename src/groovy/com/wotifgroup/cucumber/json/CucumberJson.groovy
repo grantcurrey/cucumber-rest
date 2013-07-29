@@ -4,9 +4,9 @@ import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.ResponseParseException
+import net.sf.json.JSONArray
 import org.apache.http.conn.scheme.Scheme
 import org.apache.http.conn.ssl.SSLSocketFactory
-import org.codehaus.groovy.grails.web.json.JSONArray
 
 import java.security.KeyStore
 
