@@ -8,6 +8,16 @@ import static cucumber.api.groovy.Hooks.Before
 
 def bindingUpdater
 
+Before('@cucumberRest') {
+    if (GrailsEndpointBindingUpdater.isGrailsApplication()) {
+        bindingUpdater = new GrailsEndpointBindingUpdater(binding)
+    } else {
+        bindingUpdater = new EndpointBindingUpdater(binding)
+    }
+
+    bindingUpdater.initialize()
+}
+
 Before('@endpoint') {
     if (GrailsEndpointBindingUpdater.isGrailsApplication()) {
         bindingUpdater = new GrailsEndpointBindingUpdater(binding)
@@ -16,6 +26,12 @@ Before('@endpoint') {
     }
 
     bindingUpdater.initialize()
+}
+
+After('@cucumberRest') {
+    if (bindingUpdater) {
+        bindingUpdater.remove()
+    }
 }
 
 After('@endpoint') {
