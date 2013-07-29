@@ -149,5 +149,3 @@ Scenario: Cucumber Rest Example
   Then the http response code is "200"
   And the response property "someProperty" is 1
   And the response property "parent.anotherProperty" is "abcd"```
-
-
