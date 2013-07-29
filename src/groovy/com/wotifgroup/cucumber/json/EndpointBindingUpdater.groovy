@@ -13,8 +13,8 @@ class EndpointBindingUpdater {
 
     CucumberJson cucumberJson
 
-    def jsonResourceLoader
-    def jsonPropertySetter
+    JsonResourceLoader jsonResourceLoader
+    JsonPropertySetter jsonPropertySetter
 
     def httpActions = []
 
@@ -36,7 +36,7 @@ class EndpointBindingUpdater {
         this
     }
 
-    EndpointBindingUpdater initialize() {
+    void initialize() {
         jsonResourceLoader = new JsonResourceLoader(this, cucumberJson)
         jsonPropertySetter = new JsonPropertySetter(this, cucumberJson)
 
@@ -48,14 +48,13 @@ class EndpointBindingUpdater {
 
         binding.setVariable(LOAD, jsonResourceLoader)
         binding.setVariable(SET_JSON_PROPERTY, jsonPropertySetter)
-        this
     }
 
-    public void setDateFormat(String dateFormat){
+    public void setDateFormat(String dateFormat) {
         cucumberJson.dateFormat = dateFormat
     }
 
-    public String getDateFormat(){
+    public String getDateFormat() {
         cucumberJson.dateFormat
     }
 
@@ -63,6 +62,14 @@ class EndpointBindingUpdater {
         httpActions.each { JsonAction action ->
             action.setUrlBase(url)
         }
+    }
+
+    void setJsonResourceLoader(String dir) {
+        this.jsonResourceLoader.setJsonDirectory(dir)
+    }
+
+    public void setJsonResourceLoaderBaseDir(String dir) {
+        jsonResourceLoader.setJsonDirectory(dir)
     }
 
     public void setSSLDetails(String trustStoreFile, String trustStorePassword = null, String keyStoreFile = null, String keyStorePassword = null) {

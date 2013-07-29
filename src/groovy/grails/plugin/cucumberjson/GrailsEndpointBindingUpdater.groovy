@@ -17,16 +17,22 @@ class GrailsEndpointBindingUpdater extends EndpointBindingUpdater {
         super(binding)
     }
 
-    GrailsEndpointBindingUpdater initialize() {
+    void initialize() {
         super.initialize()
 
         def configObject = new ConfigSlurper(Environment.TEST.name).parse(new File(CONFIG_PATH).toURL())
         def urlBase = configObject.grails.serverURL ?: System.getProperty("grails.testing.functional.baseUrl")
 
         setBaseUrl(urlBase)
+        setJsonResourceLoaderBaseDir("test/cucumber/json")
+    }
 
-        jsonResourceLoader.jsonDirectory = "test/cucumber/json"
-
-        this
+    public static String isGrailsApplication(){
+        try{
+            Class.forName("grails.util.Environment")
+            return new File(CONFIG_PATH).exists()
+        } catch (Exception e){
+            false
+        }
     }
 }

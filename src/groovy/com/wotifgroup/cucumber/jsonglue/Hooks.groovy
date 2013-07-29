@@ -1,6 +1,7 @@
 package com.wotifgroup.cucumber.jsonglue
 
 import com.wotifgroup.cucumber.json.EndpointBindingUpdater
+import grails.plugin.cucumberjson.GrailsEndpointBindingUpdater
 
 import static cucumber.api.groovy.Hooks.After
 import static cucumber.api.groovy.Hooks.Before
@@ -8,7 +9,12 @@ import static cucumber.api.groovy.Hooks.Before
 def bindingUpdater
 
 Before('@endpoint') {
-    bindingUpdater = new EndpointBindingUpdater(binding)
+    if (GrailsEndpointBindingUpdater.isGrailsApplication()) {
+        bindingUpdater = new GrailsEndpointBindingUpdater(binding)
+    } else {
+        bindingUpdater = new EndpointBindingUpdater(binding)
+    }
+
     bindingUpdater.initialize()
 }
 
