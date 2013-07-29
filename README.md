@@ -67,26 +67,26 @@ Provided Step Definitions
 
 **The following are intended to be used in a Background action:**
 
-- the date format is "(.*)"
-- the base url is \"(.*)\"
-- the ssl keystore is \"(.*)\" and the keystore password is \"(.*)\"
-- the ssl truststore is \"(.*)\" and the truststore password is \"(.*)\"
+- ```the date format is "(.*)"```
+- ```the base url is \"(.*)\"```
+- ```the ssl keystore is \"(.*)\" and the keystore password is \"(.*)\"```
+- ```the ssl truststore is \"(.*)\" and the truststore password is \"(.*)\"```
 
 **The remaining are intended to be used anywhere in a Gherkin file:**
 
-- I am sending a \"(.*)\"
-- I set the request \"(.*)\" property to (.*)
-- I add \"(.*)\" to the request \"(.*)\" property
-- I (remove|clear|nullify) the request \"(.*)\" property
-- I post the "([\w ]+)" to "(.*)"
-- I get the "([\w ]+)" to "(.*)"
-- I put the "([\w ]+)" to "(.*)"
-- I delete the "([\w ]+)" to "(.*)"
-- the http response code is "([0-9]*)"
-- the response property \"(.*)\" has a value
-- the response property "(.*)" equals ("?.*"?)
-- the response property \"(.*)\" is (\"?.*\"?)
-- the response property \"(.*)\" contains \"?(.*)\"?
+- ```I am sending a \"(.*)\"```
+- ```I set the request \"(.*)\" property to (.*)```
+- ```I add \"(.*)\" to the request \"(.*)\" property```
+- ```I (remove|clear|nullify) the request \"(.*)\" property```
+- ```I post the "([\w ]+)" to "(.*)"```
+- ```I get the "([\w ]+)" to "(.*)"```
+- ```I put the "([\w ]+)" to "(.*)"```
+- ```I delete the "([\w ]+)" to "(.*)"```
+- ```the http response code is "([0-9]*)"```
+- ```the response property \"(.*)\" has a value```
+- ```the response property "(.*)" equals ("?.*"?)```
+- ```the response property \"(.*)\" is (\"?.*\"?)```
+- ```the response property \"(.*)\" contains \"?(.*)\"?```
 
 Usage
 ======
@@ -99,29 +99,29 @@ The system will look in the test resource folder (outlined earlier) for a file c
 
 Once a JSON template has been loaded, you can use any of the following definitions to manipulate the resource:
 
-- I set the request \"(.*)\" property to (.*)
-- I add \"(.*)\" to the request \"(.*)\" property
-- I (remove|clear|nullify) the request \"(.*)\" property
+- ```I set the request \"(.*)\" property to (.*)```
+- ```I add \"(.*)\" to the request \"(.*)\" property```
+- ```I (remove|clear|nullify) the request \"(.*)\" property```
 
 An example of using one of the above definitions is ```I set the request "parent.child" property to test``` or
 ```I remove the request "grandparent.parent.child" property```
 
 Once you have configured the message you wish to send, you can use one of the standard http verbs:
 
-- I post the "([\w ]+)" to "(.*)"
-- I get the "([\w ]+)" to "(.*)"
-- I put the "([\w ]+)" to "(.*)"
-- I delete the "([\w ]+)" to "(.*)"
+- ```I post the "([\w ]+)" to "(.*)"```
+- ```I get the "([\w ]+)" to "(.*)"```
+- ```I put the "([\w ]+)" to "(.*)"```
+- ```I delete the "([\w ]+)" to "(.*)"```
 
 Note, ```I post the "([\w ]+)" to "(.*)"``` looks like ```I post the "example_post" to "/api/resource"``` in practice.
 
 Once you have sent your message, you need to interrogate the response, this can be used with one of the following:
 
-- the http response code is "([0-9]*)"
-- the response property \"(.*)\" has a value
-- the response property "(.*)" equals ("?.*"?)
-- the response property \"(.*)\" is (\"?.*\"?)
-- the response property \"(.*)\" contains \"?(.*)\"?
+- ```the http response code is "([0-9]*)"```
+- ```the response property \"(.*)\" has a value```
+- ```the response property "(.*)" equals ("?.*"?)```
+- ```the response property \"(.*)\" is (\"?.*\"?)```
+- ```the response property \"(.*)\" contains \"?(.*)\"?```
 
 Where you can assert a property has a value by ```the response property "parent.child" is "test"```
 
@@ -139,7 +139,7 @@ When testing response properties or setting request properties, the following sp
 Full Example
 -------------
 
-```
+```gherkin
 Scenario: Cucumber Rest Example
   Given I am sending a "cucumber_rest_example"
   And I set the request "parent.child" property to 1234
