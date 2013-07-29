@@ -22,7 +22,7 @@ cd cucumber-rest
 gradle install
 ```
 
-In your project simply add the dependency ```"com.wotifgroup.cucumber-json:cucumber-json:0.2.2"```
+In your project simply add the dependency ```"com.wotifgroup.cucumber-rest:cucumber-rest:0.2.2"```
 
 Config / Usage
 ===============
