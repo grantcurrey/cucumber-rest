@@ -129,12 +129,12 @@ Special Key Words
 ------------------
 When testing response properties or setting request properties, the following special keywords can be used:
 
-- today - sets the value to todays date (use the ```tthe date format is "(.*)"``` to set the date format to use)
-- tomorrow - sets the value to tomorrows date
-- yesterday - sets the value to yesterdays date
-- random - generates a new random uuid
-- "sometext" - The parser assumes the value is a string
-- 12321 - the parser assumes the value is a number
+- **today** - sets the value to todays date (use the ```tthe date format is "(.*)"``` to set the date format to use)
+- **tomorrow** - sets the value to tomorrows date
+- **yesterday** - sets the value to yesterdays date
+- **random** - generates a new random uuid
+- **"sometext"** - The parser assumes the value is a string
+- **12321** - the parser assumes the value is a number
 
 Full Example
 -------------
