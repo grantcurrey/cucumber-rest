@@ -1,8 +1,13 @@
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
+apply plugin: 'maven'
+
+group = 'com.wotifgroup.cucumber'
+version = '0.2.2'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
