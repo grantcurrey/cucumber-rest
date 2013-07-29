@@ -1,4 +1,4 @@
-cucumber-json plugin
+cucumber-rest plugin
 ======================
 
 This small library adds a common cucumber DSL for writing cucumber tests to test restfull endpoints.  The library
@@ -10,6 +10,8 @@ provides the following:
 
 The key component of this library is a consistent way of writing gherkin syntax specifically around the common actions
 associated with setting up, transmitting and interrogating restfull transactions.
+
+Currently the library does not support XML, it supports JSON.  I plan to add XML shortly.
 
 Installation 
 =============
