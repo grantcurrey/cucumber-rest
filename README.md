@@ -62,8 +62,20 @@ You can override this using the ```the base url is "http://localhost:8080/someur
 
 Testing resource files, ```someRequest.json``` are assume to be located in ```test/cucumber/json```.  
 
-Provided Step Definitions
-==========================
+Usage
+======
+
+Activating the plugin
+------------------------
+
+You need tag your scenario of feature with ```@cucumberRest```
+
+The library ships with a hooks file which registers a groovy binding updater based on the tag above.  If you do not
+tag your scenario or feature with ```@cucumberRest``` the dsl outlined below will not function correctly.
+
+
+Step definition Overview
+-------------------------
 
 **The following are intended to be used in a Background action:**
 
@@ -88,8 +100,8 @@ Provided Step Definitions
 - ```the response property \"(.*)\" is (\"?.*\"?)```
 - ```the response property \"(.*)\" contains \"?(.*)\"?```
 
-Usage
-======
+DSL Explanation
+-----------------
 
 ```I am sending a \"(.*)\"``` This step definition allows you to load up a JSON file ready to be manipulated and ultimately sent to a server.
 
@@ -140,6 +152,7 @@ Full Example
 -------------
 
 ```gherkin
+@cucumberRest
 Scenario: Cucumber Rest Example
   Given I am sending a "cucumber_rest_example"
   And I set the request "parent.child" property to 1234
