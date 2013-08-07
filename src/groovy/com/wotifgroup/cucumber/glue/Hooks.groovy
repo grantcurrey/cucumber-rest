@@ -1,7 +1,7 @@
-package com.wotifgroup.cucumber.jsonglue
+package com.wotifgroup.cucumber.glue
 
-import com.wotifgroup.cucumber.json.EndpointBindingUpdater
-import grails.plugin.cucumberjson.GrailsEndpointBindingUpdater
+import com.wotifgroup.cucumber.rest.EndpointBindingUpdater
+import grails.plugin.cucumberrest.GrailsEndpointBindingUpdater
 
 import static cucumber.api.groovy.Hooks.After
 import static cucumber.api.groovy.Hooks.Before

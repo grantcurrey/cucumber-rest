@@ -1,4 +1,4 @@
-package com.wotifgroup.cucumber.json
+package com.wotifgroup.cucumber.rest
 
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
@@ -12,11 +12,12 @@ import java.security.KeyStore
 
 import static groovyx.net.http.Method.*
 
-class CucumberJson {
+class CucumberRest {
 
-    static final JSON_REQUEST_VARIABLE = "jsonRequest"
-    static final JSON_RESPONSE_CODE_VARIABLE = "responseCode"
-    static final JSON_RESPONSE_VARIABLE = "jsonResponse"
+    static final REQUEST_VARIABLE = "request"
+    static final REQUEST_TYPE = "requestType"
+    static final RESPONSE_CODE_VARIABLE = "responseCode"
+    static final RESPONSE_VARIABLE = "response"
 
     private def keyStore
     private def trustStore
@@ -26,7 +27,7 @@ class CucumberJson {
 
     private Binding binding
 
-    public CucumberJson(Binding binding) {
+    public CucumberRest(Binding binding) {
         this.binding = binding
     }
 
@@ -75,22 +76,24 @@ class CucumberJson {
             method = GET
         }
 
+        def type = binding.getProperty(REQUEST_TYPE)
+
         try {
-            http.request(method, ContentType.JSON) { req ->
+            http.request(method, type) { req ->
                 if (method == POST || method == PUT) {
-                    body = binding.getVariable(JSON_REQUEST_VARIABLE);
+                    body = binding.getVariable(REQUEST_VARIABLE);
                 }
 
-                response.success = { resp, json ->
+                response.success = { resp, data ->
                     def statusCode = resp.statusLine.statusCode
-                    binding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
-                    binding.setVariable(JSON_RESPONSE_VARIABLE, json)
+                    binding.setVariable(RESPONSE_CODE_VARIABLE, statusCode)
+                    binding.setVariable(RESPONSE_VARIABLE, data)
                 }
 
-                response.failure = { resp, json ->
+                response.failure = { resp, data ->
                     def statusCode = resp.statusLine.statusCode
-                    binding.setVariable(JSON_RESPONSE_CODE_VARIABLE, statusCode)
-                    binding.setVariable(JSON_RESPONSE_VARIABLE, json)
+                    binding.setVariable(RESPONSE_CODE_VARIABLE, statusCode)
+                    binding.setVariable(RESPONSE_VARIABLE, data)
                 }
             }
         } catch (ResponseParseException e) {
@@ -98,13 +101,14 @@ class CucumberJson {
         }
     }
 
-    public void loadJsonRequest(def directory, def name) {
-        binding.setVariable(JSON_REQUEST_VARIABLE, new JsonSlurper().parseText(FileUtil.loadFileResource(name, directory)));
+    public void loadRequest(def directory, def name, def slurper, def type) {
+        binding.setVariable(REQUEST_VARIABLE, slurper.parseText(FileUtil.loadFileResource(name, directory)));
+        binding.setVariable(REQUEST_TYPE,type)
     }
 
     public void setJsonProperty(String action, String path, String value) {
         String[] pathParts = path.split("\\.")
-        def json = binding.getVariable(JSON_REQUEST_VARIABLE)
+        def json = binding.getVariable(REQUEST_VARIABLE)
 
         def child = pathParts[-1]
         def parent = parseJsonExpression(pathParts, json)

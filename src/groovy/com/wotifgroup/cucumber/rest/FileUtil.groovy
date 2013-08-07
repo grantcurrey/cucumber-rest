@@ -1,4 +1,4 @@
-package com.wotifgroup.cucumber.json
+package com.wotifgroup.cucumber.rest
 
 import cucumber.runtime.io.FileResourceLoader
 

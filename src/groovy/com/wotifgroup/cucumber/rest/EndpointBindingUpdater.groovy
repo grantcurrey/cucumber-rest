@@ -1,4 +1,4 @@
-package com.wotifgroup.cucumber.json
+package com.wotifgroup.cucumber.rest
 
 class EndpointBindingUpdater {
 
@@ -11,17 +11,17 @@ class EndpointBindingUpdater {
 
     Binding binding
 
-    CucumberJson cucumberJson
+    CucumberRest cucumberRest
 
-    JsonResourceLoader jsonResourceLoader
-    JsonPropertySetter jsonPropertySetter
+    ResourceLoader resourceLoader
+    PropertySetter jsonPropertySetter
 
     def httpActions = []
 
     EndpointBindingUpdater(Binding binding) {
         this.binding = binding
-        this.binding.setVariable("jsonBindingUpdater", this)
-        this.cucumberJson = new CucumberJson(binding)
+        this.binding.setVariable("cucumberRestBindingUpdater", this)
+        this.cucumberRest = new CucumberRest(binding)
     }
 
     EndpointBindingUpdater remove() {
@@ -32,53 +32,49 @@ class EndpointBindingUpdater {
             binding.variables.remove(value)
         }
 
-        binding.variables.remove("jsonBindingUpdater")
+        binding.variables.remove("cucumberRestBindingUpdater")
         this
     }
 
     void initialize() {
-        jsonResourceLoader = new JsonResourceLoader(this, cucumberJson)
-        jsonPropertySetter = new JsonPropertySetter(this, cucumberJson)
+        resourceLoader = new ResourceLoader(this, cucumberRest)
+        jsonPropertySetter = new PropertySetter(this, cucumberRest)
 
         [POST, PUT, DELETE, GET].each { value ->
-            def action = new JsonAction(value, this, cucumberJson)
+            def action = new DoAction(value, this, cucumberRest)
             httpActions.add(action)
             binding.setVariable(value, action)
         }
 
-        binding.setVariable(LOAD, jsonResourceLoader)
+        binding.setVariable(LOAD, resourceLoader)
         binding.setVariable(SET_JSON_PROPERTY, jsonPropertySetter)
     }
 
     public void setDateFormat(String dateFormat) {
-        cucumberJson.dateFormat = dateFormat
+        cucumberRest.dateFormat = dateFormat
     }
 
     public String getDateFormat() {
-        cucumberJson.dateFormat
+        cucumberRest.dateFormat
     }
 
     public void setBaseUrl(String url) {
-        httpActions.each { JsonAction action ->
+        httpActions.each { DoAction action ->
             action.setUrlBase(url)
         }
     }
 
-    void setJsonResourceLoader(String dir) {
-        this.jsonResourceLoader.setJsonDirectory(dir)
-    }
-
-    public void setJsonResourceLoaderBaseDir(String dir) {
-        jsonResourceLoader.setJsonDirectory(dir)
+    public void setResourceLoaderBaseDir(String dir) {
+        resourceLoader.setResourceDirectory(dir)
     }
 
     public void setSSLDetails(String trustStoreFile, String trustStorePassword = null, String keyStoreFile = null, String keyStorePassword = null) {
         if (trustStoreFile) {
-            cucumberJson.initializeSSLTruststore(trustStoreFile, trustStorePassword)
+            cucumberRest.initializeSSLTruststore(trustStoreFile, trustStorePassword)
         }
 
         if (keyStoreFile) {
-            cucumberJson.initializeSSLKeystore(keyStoreFile, keyStorePassword)
+            cucumberRest.initializeSSLKeystore(keyStoreFile, keyStorePassword)
         }
     }
 }
