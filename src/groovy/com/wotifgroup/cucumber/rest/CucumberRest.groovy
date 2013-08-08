@@ -1,10 +1,9 @@
 package com.wotifgroup.cucumber.rest
 
-import groovy.json.JsonSlurper
-import groovyx.net.http.ContentType
+import com.wotifgroup.cucumber.rest.setter.Setter
+import groovy.util.slurpersupport.GPathResult
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.ResponseParseException
-import net.sf.json.JSONArray
 import org.apache.http.conn.scheme.Scheme
 import org.apache.http.conn.ssl.SSLSocketFactory
 
@@ -56,7 +55,7 @@ class CucumberRest {
         }
     }
 
-    public void doJsonRequest(def methodString, def urlBase, def path) {
+    public void doRequest(def methodString, def urlBase, def path) {
         def http = new HTTPBuilder("${urlBase}${path}")
 
         if (keyStore && trustStore) {
@@ -103,20 +102,21 @@ class CucumberRest {
 
     public void loadRequest(def directory, def name, def slurper, def type) {
         binding.setVariable(REQUEST_VARIABLE, slurper.parseText(FileUtil.loadFileResource(name, directory)));
-        binding.setVariable(REQUEST_TYPE,type)
+        binding.setVariable(REQUEST_TYPE, type)
     }
 
-    public void setJsonProperty(String action, String path, String value) {
+    public void setProperty(String action, String path, String value) {
         String[] pathParts = path.split("\\.")
-        def json = binding.getVariable(REQUEST_VARIABLE)
+        def document = binding.getVariable(REQUEST_VARIABLE)
+        def type = binding.getVariable(REQUEST_TYPE)
 
         def child = pathParts[-1]
-        def parent = parseJsonExpression(pathParts, json)
+        def parent = parseGPathExpression(pathParts, document)
 
-        this."${action}"(parent, child, value)
+        Setter.getSetter(type)."${action}"(parent, child, value, [dateFormat: dateFormat])
     }
 
-    public static def parseJsonExpression(String[] path, parent) {
+    public static def parseGPathExpression(String[] path, def parent) {
         path[0..<path.length - 1].each { String pathPart ->
             def m = pathPart =~ /(.*)\[([0-9]*)\]/
             if (m) {
@@ -133,51 +133,4 @@ class CucumberRest {
         return parent
     }
 
-    public static def parseStringToType(String value, String dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ") {
-        if (value.startsWith("\"") && value.endsWith("\"")) {
-            return value.substring(1, value.length() - 1)
-        } else if (value == "today") {
-            return new Date().clearTime().format(dateFormat)
-        } else if (value == "tomorrow") {
-            return (new Date() + 1).clearTime().format(dateFormat)
-        } else if (value == "yesterday") {
-            return (new Date() - 1).clearTime().format(dateFormat)
-        } else if (value == "random") {
-            return UUID.randomUUID() as String
-        } else if (!value.isNumber()) {
-            return value
-        } else {
-            if (value.contains(".")) {
-                return value as Float
-            } else {
-                return value as Long
-            }
-        }
-    }
-
-    private void set(def parent, def child, String value) {
-        parent."$child" = parseStringToType(value, dateFormat)
-    }
-
-    private void clear(def parent, def child, def value = null) {
-        parent."$child" = ""
-    }
-
-    private void remove(def parent, def child, def value = null) {
-        parent.remove(child)
-    }
-
-    private void nullify(def parent, def child, def value = null) {
-        parent."$child" = null
-    }
-
-    private void add(def parent, def child, String value) {
-        if (parent."$child" == null) {
-            parent."$child" = new JSONArray()
-        }
-
-        if (parent."$child" instanceof List) {
-            parent."$child".add(parseStringToType(value))
-        }
-    }
 }

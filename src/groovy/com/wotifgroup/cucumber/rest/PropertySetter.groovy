@@ -14,6 +14,6 @@ class PropertySetter extends Closure {
     }
 
     protected doCall(Object[] args) {
-        cucumberRest.setJsonProperty(args[0] as String, args[1] as String, args.length == 3 ? args[2] : null)
+        cucumberRest.setProperty(args[0] as String, args[1] as String, args.length == 3 ? args[2] : null)
     }
 }

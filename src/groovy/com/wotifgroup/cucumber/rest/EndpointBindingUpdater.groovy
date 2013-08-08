@@ -3,7 +3,7 @@ package com.wotifgroup.cucumber.rest
 class EndpointBindingUpdater {
 
     static final String LOAD = "load"
-    static final String SET_JSON_PROPERTY = "setJsonProperty"
+    static final String SET_PROPERTY = "setProperty"
     static final String POST = "post"
     static final String PUT = "put"
     static final String GET = "get"
@@ -26,7 +26,7 @@ class EndpointBindingUpdater {
 
     EndpointBindingUpdater remove() {
         binding.variables.remove(LOAD)
-        binding.variables.remove(SET_JSON_PROPERTY)
+        binding.variables.remove(SET_PROPERTY)
 
         [POST, PUT, DELETE, GET].each { value ->
             binding.variables.remove(value)
@@ -47,7 +47,7 @@ class EndpointBindingUpdater {
         }
 
         binding.setVariable(LOAD, resourceLoader)
-        binding.setVariable(SET_JSON_PROPERTY, jsonPropertySetter)
+        binding.setVariable(SET_PROPERTY, jsonPropertySetter)
     }
 
     public void setDateFormat(String dateFormat) {

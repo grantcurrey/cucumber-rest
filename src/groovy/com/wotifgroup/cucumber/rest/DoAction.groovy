@@ -21,7 +21,7 @@ class DoAction extends Closure {
         if (!urlBase) {
             throw new Exception("Unable to determine the base url to post to.  Currently urlBase is [${urlBase}].  Either set this on JsonAction or set -Dtesting.functional.baseUrl")
         } else {
-            cucumberRest.doJsonRequest(action, urlBase, args[0])
+            cucumberRest.doRequest(action, urlBase, args[0])
         }
     }
 
