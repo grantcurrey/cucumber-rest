@@ -1,7 +1,6 @@
 package grails.plugin.cucumberrest
 
 import com.wotifgroup.cucumber.rest.EndpointBindingUpdater
-import grails.util.Environment
 
 /**
  * User: gcurrey
@@ -20,14 +19,14 @@ class GrailsEndpointBindingUpdater extends EndpointBindingUpdater {
     void initialize() {
         super.initialize()
 
-        def configObject = new ConfigSlurper(Environment.TEST.name).parse(new File(CONFIG_PATH).toURL())
+        def configObject = new ConfigSlurper("TEST").parse(new File(CONFIG_PATH).toURL())
         def urlBase = configObject.grails.serverURL ?: System.getProperty("grails.testing.functional.baseUrl")
 
         setBaseUrl(urlBase)
         setResourceLoaderBaseDir("test/cucumber/json")
     }
 
-    public static String isGrailsApplication(){
+    public static def isGrailsApplication(){
         try{
             Class.forName("grails.util.Environment")
             return new File(CONFIG_PATH).exists()
