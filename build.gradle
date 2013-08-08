@@ -3,7 +3,7 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 
 group = 'com.wotifgroup.cucumber'
-version = '0.2.7'
+version = '1.0.0'
 
 repositories {
     mavenLocal()
