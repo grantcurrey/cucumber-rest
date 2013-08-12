@@ -2,6 +2,8 @@ package com.wotifgroup.cucumber.rest
 
 import com.wotifgroup.cucumber.rest.setter.Setter
 import groovy.util.slurpersupport.GPathResult
+import groovy.xml.XmlUtil
+import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.ResponseParseException
 import org.apache.http.conn.scheme.Scheme
@@ -76,8 +78,13 @@ class CucumberRest {
             method = GET
         }
 
+        def requestBody = binding.getVariable(REQUEST_VARIABLE);
         def requestHeaders = binding.getVariable(REQUEST_HEADERS_VARIABLE) as Map
         def type = binding.getProperty(REQUEST_TYPE)
+
+        if (type == ContentType.XML) {
+            requestBody = XmlUtil.serialize(requestBody)
+        }
 
         try {
             http.request(method, type) { req ->
@@ -86,7 +93,7 @@ class CucumberRest {
                 }
 
                 if (method == POST || method == PUT) {
-                    body = binding.getVariable(REQUEST_VARIABLE);
+                    body = requestBody
                 }
 
                 response.success = { resp, data ->
@@ -115,11 +122,12 @@ class CucumberRest {
         if (!headerName && !value) {
             binding.setVariable(REQUEST_HEADERS_VARIABLE, null)
         } else {
-            def headers = binding.getVariable(REQUEST_HEADERS_VARIABLE)
-            if (!headers) {
-                headers = [:]
-                binding.setVariable(REQUEST_HEADERS_VARIABLE, headers)
+            if (!binding.hasVariable(REQUEST_HEADERS_VARIABLE)) {
+                binding.setVariable(REQUEST_HEADERS_VARIABLE, [:])
             }
+
+            def headers = binding.getVariable(REQUEST_HEADERS_VARIABLE)
+            binding.setVariable(REQUEST_HEADERS_VARIABLE, headers)
             headers."$headerName" = value
         }
     }

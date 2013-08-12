@@ -24,7 +24,7 @@ Given(~/^the ssl truststore is \"(.*)\" and the truststore password is \"(.*)\"/
 }
 
 Given(~'^I am sending a \"(.*)\" (json|xml) request$') { String name, String type ->
-    load name.replace(" ", "_") + "." + type, ContentType.valueOf(type)
+    load name.replace(" ", "_") + "." + type, ContentType.valueOf(type.toUpperCase())
 }
 
 Given(~'^I am sending a \"(.*)\"$') { String json ->

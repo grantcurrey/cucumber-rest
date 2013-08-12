@@ -22,9 +22,9 @@ class ResourceLoader extends Closure {
         def slurper;
         ContentType type = args[1]
         if (type == ContentType.XML) {
-            slurper = new JsonSlurper()
-        } else {
             slurper = new XmlSlurper()
+        } else {
+            slurper = new JsonSlurper()
         }
         cucumberRest.loadRequest("${resourceDirectory}/${type.name().toLowerCase()}", args[0] as String, slurper, type);
     }
