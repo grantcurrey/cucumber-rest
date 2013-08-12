@@ -14,6 +14,7 @@ import static groovyx.net.http.Method.*
 class CucumberRest {
 
     static final REQUEST_VARIABLE = "request"
+    static final REQUEST_HEADERS_VARIABLE = "requestHeaders"
     static final REQUEST_TYPE = "requestType"
     static final RESPONSE_CODE_VARIABLE = "responseCode"
     static final RESPONSE_VARIABLE = "response"
@@ -75,10 +76,15 @@ class CucumberRest {
             method = GET
         }
 
+        def requestHeaders = binding.getVariable(REQUEST_HEADERS_VARIABLE) as Map
         def type = binding.getProperty(REQUEST_TYPE)
 
         try {
             http.request(method, type) { req ->
+                if (requestHeaders) {
+                    headers = requestHeaders
+                }
+
                 if (method == POST || method == PUT) {
                     body = binding.getVariable(REQUEST_VARIABLE);
                 }
@@ -103,6 +109,19 @@ class CucumberRest {
     public void loadRequest(def directory, def name, def slurper, def type) {
         binding.setVariable(REQUEST_VARIABLE, slurper.parseText(FileUtil.loadFileResource(name, directory)));
         binding.setVariable(REQUEST_TYPE, type)
+    }
+
+    public void setHeader(String headerName, String value) {
+        if (!headerName && !value) {
+            binding.setVariable(REQUEST_HEADERS_VARIABLE, null)
+        } else {
+            def headers = binding.getVariable(REQUEST_HEADERS_VARIABLE)
+            if (!headers) {
+                headers = [:]
+                binding.setVariable(REQUEST_HEADERS_VARIABLE, headers)
+            }
+            headers."$headerName" = value
+        }
     }
 
     public void setProperty(String action, String path, String value) {

@@ -31,6 +31,14 @@ Given(~'^I am sending a \"(.*)\"$') { String json ->
     load json.replace(" ", "_") + ".json", ContentType.JSON
 }
 
+Given(~'^I clear request headers$'){ ->
+    setHeader null, null
+}
+
+Given(~'^I set the request header \"(.*)\" property to (.*)$'){ String header, String value ->
+    setHeader header, value
+}
+
 Given(~'^I set the request \"(.*)\" property to (.*)$') { String property, String value ->
     setProperty "set", property, value
 }

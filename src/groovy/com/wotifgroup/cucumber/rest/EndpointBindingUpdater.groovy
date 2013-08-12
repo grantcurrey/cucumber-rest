@@ -4,6 +4,7 @@ class EndpointBindingUpdater {
 
     static final String LOAD = "load"
     static final String SET_PROPERTY = "setProperty"
+    static final String SET_HEADER = "setHeader"
     static final String POST = "post"
     static final String PUT = "put"
     static final String GET = "get"
@@ -14,7 +15,8 @@ class EndpointBindingUpdater {
     CucumberRest cucumberRest
 
     ResourceLoader resourceLoader
-    PropertySetter jsonPropertySetter
+    PropertySetter propertySetter
+    HeaderSetter headerSetter
 
     def httpActions = []
 
@@ -27,6 +29,7 @@ class EndpointBindingUpdater {
     EndpointBindingUpdater remove() {
         binding.variables.remove(LOAD)
         binding.variables.remove(SET_PROPERTY)
+        binding.variables.remove(SET_HEADER)
 
         [POST, PUT, DELETE, GET].each { value ->
             binding.variables.remove(value)
@@ -38,7 +41,8 @@ class EndpointBindingUpdater {
 
     void initialize() {
         resourceLoader = new ResourceLoader(this, cucumberRest)
-        jsonPropertySetter = new PropertySetter(this, cucumberRest)
+        propertySetter = new PropertySetter(this, cucumberRest)
+        headerSetter = new HeaderSetter(this, cucumberRest)
 
         [POST, PUT, DELETE, GET].each { value ->
             def action = new DoAction(value, this, cucumberRest)
@@ -47,7 +51,8 @@ class EndpointBindingUpdater {
         }
 
         binding.setVariable(LOAD, resourceLoader)
-        binding.setVariable(SET_PROPERTY, jsonPropertySetter)
+        binding.setVariable(SET_PROPERTY, propertySetter)
+        binding.setVariable(SET_HEADER, headerSetter)
     }
 
     public void setDateFormat(String dateFormat) {
