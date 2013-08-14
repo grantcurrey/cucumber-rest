@@ -90,6 +90,7 @@ Step definition Overview
 
 - ```I am sending a \"(.*)\"```
 - ```I set the request \"(.*)\" property to (.*)```
+- ```I set the request header \"(.*)\" to (.*)```
 - ```I add \"(.*)\" to the request \"(.*)\" property```
 - ```I (remove|clear|nullify) the request \"(.*)\" property```
 - ```I post the "([\w ]+)" to "(.*)"```
@@ -97,6 +98,8 @@ Step definition Overview
 - ```I put the "([\w ]+)" to "(.*)"```
 - ```I delete the "([\w ]+)" to "(.*)"```
 - ```the http response code is "([0-9]*)"```
+- ```the response header property \"(.*)\" has a value```
+- ```the response header property \"(.*)\" is (\"?.*\"?)```
 - ```the response property \"(.*)\" has a value```
 - ```the response property "(.*)" equals ("?.*"?)```
 - ```the response property \"(.*)\" is (\"?.*\"?)```
@@ -149,6 +152,8 @@ When testing response properties or setting request properties, the following sp
 - **random** - generates a new random uuid
 - **"sometext"** - The parser assumes the value is a string
 - **12321** - the parser assumes the value is a number
+- **lastResponse.{{somepath}}** - The last response is available when setting values on a subsequent request
+- **lastResponseHeaders.{{somekey}}** - The last response headers are available when setting value son a subsequent request
 
 Full Example
 -------------
@@ -160,8 +165,11 @@ Scenario: Cucumber Rest Example
   And I set the request "parent.child" property to 1234
   And I set the request "parent.date" property to today
   And I clear the request "parent.nextChild" property
-  When I post the "cucumber_rest_example" to "/api/cucumber-rest-test"
-  Then the http response code is "200"
+  And I post the "cucumber_rest_example" to "/api/cucumber-rest-test"
+  And the http response code is "200"
+  When I am sending a "cucumber_followup_request_example"
+  And I set the request "parent.child" property to lastResponse.someParent.someChild
+  And I set the request "parent.nextChild" property to lastResponseHeaders.someValue
   And the response property "someProperty" is 1
   And the response property "parent.anotherProperty" is "abcd"```
 
