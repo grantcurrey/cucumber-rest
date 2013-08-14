@@ -1,6 +1,9 @@
 package com.wotifgroup.cucumber.rest.setter
 
+import com.wotifgroup.cucumber.rest.ExpressionUtil
 import net.sf.json.JSONArray
+
+import static com.wotifgroup.cucumber.rest.ExpressionUtil.parseStringToType
 
 /**
  * User: gcurrey

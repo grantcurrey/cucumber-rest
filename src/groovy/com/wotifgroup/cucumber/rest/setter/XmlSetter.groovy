@@ -1,5 +1,7 @@
 package com.wotifgroup.cucumber.rest.setter
 
+import static com.wotifgroup.cucumber.rest.ExpressionUtil.parseStringToType
+
 /**
  * User: gcurrey
  * Date: 8/08/13

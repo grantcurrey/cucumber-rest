@@ -1,5 +1,6 @@
 package com.wotifgroup.cucumber.rest.setter
 
+import com.wotifgroup.cucumber.rest.ExpressionUtil
 import groovyx.net.http.ContentType
 import net.sf.json.JSONArray
 
@@ -30,26 +31,4 @@ abstract class Setter {
     public abstract void nullify(def parent, def child, def value, def settings);
 
     public abstract void add(def parent, def child, String value, def settings);
-
-    public static def parseStringToType(String value, String dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ") {
-        if (value.startsWith("\"") && value.endsWith("\"")) {
-            return value.substring(1, value.length() - 1)
-        } else if (value == "today") {
-            return new Date().clearTime().format(dateFormat)
-        } else if (value == "tomorrow") {
-            return (new Date() + 1).clearTime().format(dateFormat)
-        } else if (value == "yesterday") {
-            return (new Date() - 1).clearTime().format(dateFormat)
-        } else if (value == "random") {
-            return UUID.randomUUID() as String
-        } else if (!value.isNumber()) {
-            return value
-        } else {
-            if (value.contains(".")) {
-                return value as Float
-            } else {
-                return value as Long
-            }
-        }
-    }
 }
