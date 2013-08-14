@@ -171,5 +171,6 @@ Scenario: Cucumber Rest Example
   And I set the request "parent.child" property to lastResponse.someParent.someChild
   And I set the request "parent.nextChild" property to lastResponseHeaders.someValue
   And the response property "someProperty" is 1
-  And the response property "parent.anotherProperty" is "abcd"```
+  And the response property "parent.anotherProperty" is "abcd"
+```
 
