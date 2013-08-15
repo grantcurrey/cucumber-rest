@@ -1,9 +1,10 @@
 package com.wotifgroup.cucumber.glue
 
-import com.wotifgroup.cucumber.rest.CucumberRest
-
+import com.wotifgroup.cucumber.rest.ExpressionUtil
 import groovyx.net.http.ContentType
 
+import static com.wotifgroup.cucumber.rest.ExpressionUtil.evaluateGPathExpression
+import static com.wotifgroup.cucumber.rest.ExpressionUtil.parseStringToType
 import static cucumber.api.groovy.EN.Given
 import static cucumber.api.groovy.EN.Then
 
@@ -71,34 +72,26 @@ Then(~/^the http response code is "([0-9]*)"/) { int code ->
     assert (responseCode as Integer == code as Integer)
 }
 
-Then(~'^the response property \"(.*)\" has a value$') { String property ->
-    path = property.split("\\.")
-    child = path[-1]
-    parent = CucumberRest.parseGPathExpression(path, response)
+Then(~'^the response header \"(.*)\" equals ("?.*"?)$'){ String header, String value ->
+    assert (responseHeaders."${header}" == parseStringToType(value))
+}
 
-    assert parent."$child" != null && String.valueOf(parent."$child") != ""
+Then(~'^the response header \"(.*)\" has a value$') { String header ->
+    assert (responseHeaders."${header}" != null)
+}
+
+Then(~'^the response property \"(.*)\" has a value$') { String property ->
+    assert evaluateGPathExpression(property, response) != null && String.valueOf(parent."$child") != ""
 }
 
 Then(~'^the response property \"(.*)\" equals (\"?.*\"?)$') { String property, String value ->
-    path = property.split("\\.")
-    child = path[-1]
-    parent = CucumberRest.parseGPathExpression(path, response)
-
-    assert (parent."$child" == CucumberRest.parseStringToType(value, cucumberRestBindingUpdater.getDateFormat()))
+    assert (evaluateGPathExpression(property, response) == parseStringToType(value, cucumberRestBindingUpdater.getDateFormat()))
 }
 
 Then(~'^the response property \"(.*)\" is (\"?.*\"?)$') { String property, String value ->
-    path = property.split("\\.")
-    child = path[-1]
-    parent = CucumberRest.parseGPathExpression(path, response)
-
-    assert (parent."$child" == CucumberRest.parseStringToType(value, cucumberRestBindingUpdater.getDateFormat()))
+    assert (evaluateGPathExpression(property, response) == parseStringToType(value, cucumberRestBindingUpdater.getDateFormat()))
 }
 
 Then(~'^the response property \"(.*)\" contains \"?(.*)\"?$') { String property, String value ->
-    path = property.split("\\.")
-    child = path[-1]
-    parent = CucumberRest.parseGPathExpression(path, response)
-
-    assert String.valueOf(parent."$child").contains(value)
+    assert String.valueOf(evaluateGPathExpression(property, response)).contains(value)
 }

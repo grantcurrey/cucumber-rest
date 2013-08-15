@@ -20,14 +20,15 @@ class CucumberRest {
     static final REQUEST_TYPE = "requestType"
     static final RESPONSE_CODE_VARIABLE = "responseCode"
     static final RESPONSE_VARIABLE = "response"
+    static final RESPONSE_HEADERS = "responseHeaders"
 
-    private def keyStore
     private def trustStore
+    private def keyStore
     private def keyStorePassword
 
-    String dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-
     private Binding binding
+
+    String dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 
     public CucumberRest(Binding binding) {
         this.binding = binding
@@ -61,11 +62,9 @@ class CucumberRest {
     public void doRequest(def methodString, def urlBase, def path) {
         def http = new HTTPBuilder("${urlBase}${path}")
 
-        if (keyStore && trustStore) {
-            def factory = new SSLSocketFactory(keyStore, keyStorePassword, trustStore)
-            factory.hostnameVerifier = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
-            http.client.connectionManager.schemeRegistry.register(new Scheme("https", factory, 443))
-        }
+        def factory = new SSLSocketFactory(keyStore, keyStorePassword, trustStore)
+        factory.hostnameVerifier = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
+        http.client.connectionManager.schemeRegistry.register(new Scheme("https", factory, 443))
 
         def method = POST
         if (methodString == "post") {
@@ -100,12 +99,14 @@ class CucumberRest {
                     def statusCode = resp.statusLine.statusCode
                     binding.setVariable(RESPONSE_CODE_VARIABLE, statusCode)
                     binding.setVariable(RESPONSE_VARIABLE, data)
+                    binding.setVariable(RESPONSE_HEADERS, resp.headers)
                 }
 
                 response.failure = { resp, data ->
                     def statusCode = resp.statusLine.statusCode
                     binding.setVariable(RESPONSE_CODE_VARIABLE, statusCode)
                     binding.setVariable(RESPONSE_VARIABLE, data)
+                    binding.setVariable(RESPONSE_HEADERS, resp.headers)
                 }
             }
         } catch (ResponseParseException e) {
@@ -138,26 +139,8 @@ class CucumberRest {
         def type = binding.getVariable(REQUEST_TYPE)
 
         def child = pathParts[-1]
-        def parent = parseGPathExpression(pathParts, document)
+        def parent = ExpressionUtil.parseGPathExpression(pathParts, document)
 
-        Setter.getSetter(type)."${action}"(parent, child, value, [dateFormat: dateFormat])
+        Setter.getSetter(type)."${action}"(parent, child, value, [dateFormat: dateFormat, binding: binding])
     }
-
-    public static def parseGPathExpression(String[] path, def parent) {
-        path[0..<path.length - 1].each { String pathPart ->
-            def m = pathPart =~ /(.*)\[([0-9]*)\]/
-            if (m) {
-                if (m[0][1]) {
-                    //support for arrays
-                    parent = parent."${m[0][1]}"[m[0][2] as Integer]
-                } else {
-                    parent = parent[m[0][2] as Integer]
-                }
-            } else {
-                parent = parent."$pathPart"
-            }
-        }
-        return parent
-    }
-
 }
