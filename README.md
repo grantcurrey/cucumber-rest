@@ -95,6 +95,7 @@ Step definition Overview
 - ```I (remove|clear|nullify) the request \"(.*)\" property```
 - ```I post the "([\w ]+)" to "(.*)"```
 - ```I get the "([\w ]+)" to "(.*)"```
+- ```I call the "?([^"]*)"? resource``` - This is the same as the step above, only making more sense (GET)
 - ```I put the "([\w ]+)" to "(.*)"```
 - ```I delete the "([\w ]+)" to "(.*)"```
 - ```the http response code is "([0-9]*)"```
@@ -154,6 +155,10 @@ When testing response properties or setting request properties, the following sp
 - **12321** - the parser assumes the value is a number
 - **lastResponse.{{somepath}}** - The last response is available when setting values on a subsequent request
 - **lastResponseHeaders.{{somekey}}** - The last response headers are available when setting value son a subsequent request
+
+Note - Special key words can also be used when setting resource paths (ie, GET, PUT, POST and DELETE steps), provided
+the are wraped in braces { }.  An example of such a call is ```When I call the "{lastResponseHeaders.Location}" resource```.  
+Given the Location heaer is set to www.google.com, the result will be a GET request to http://www.google.com.
 
 Full Example
 -------------
