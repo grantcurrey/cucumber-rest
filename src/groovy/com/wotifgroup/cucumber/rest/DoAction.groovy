@@ -1,5 +1,7 @@
 package com.wotifgroup.cucumber.rest
 
+import groovyx.net.http.ContentType
+
 
 /**
  * User: gcurrey
@@ -21,6 +23,9 @@ class DoAction extends Closure {
         if (!urlBase) {
             throw new Exception("Unable to determine the base url to post to.  Currently urlBase is [${urlBase}].  Either set this on JsonAction or set -Dtesting.functional.baseUrl")
         } else {
+            if(args.length == 2){
+                cucumberRest.setRequestPayloadType(args[1] as ContentType)
+            }
             cucumberRest.doRequest(action, urlBase, args[0])
         }
     }

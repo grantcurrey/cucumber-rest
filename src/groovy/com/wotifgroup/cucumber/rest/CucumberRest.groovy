@@ -1,7 +1,6 @@
 package com.wotifgroup.cucumber.rest
 
 import com.wotifgroup.cucumber.rest.setter.Setter
-import groovy.util.slurpersupport.GPathResult
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
@@ -28,6 +27,7 @@ class CucumberRest {
 
     private Binding binding
 
+    Map<String,Closure> customResponseParsers
     String dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 
     public CucumberRest(Binding binding) {
@@ -59,12 +59,24 @@ class CucumberRest {
         }
     }
 
-    public void doRequest(def methodString, def urlBase, def path) {
+    public void doRequest(def methodString, def urlBase, String path) {
+
+        def pathVariableMatcher = path =~ /\{([a-zA-Z0-9_\.]*)\}/
+        pathVariableMatcher.each { match ->
+            path = path.replace(match[0], ExpressionUtil.parseStringToType(match[1].toString(), dateFormat, binding))
+        }
+
         def http = new HTTPBuilder("${urlBase}${path}")
 
         def factory = new SSLSocketFactory(keyStore, keyStorePassword, trustStore)
         factory.hostnameVerifier = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
         http.client.connectionManager.schemeRegistry.register(new Scheme("https", factory, 443))
+
+        if(customResponseParsers){
+            customResponseParsers.each{n,v ->
+                http.parser."${n}" = v
+            }
+        }
 
         def method = POST
         if (methodString == "post") {
@@ -81,11 +93,12 @@ class CucumberRest {
         def requestHeaders = binding.getVariable(REQUEST_HEADERS_VARIABLE) as Map
         def type = binding.getProperty(REQUEST_TYPE)
 
-        if (type == ContentType.XML) {
+        if (requestBody && type == ContentType.XML && method != GET) {
             requestBody = XmlUtil.serialize(requestBody)
         }
 
         try {
+
             http.request(method, type) { req ->
                 if (requestHeaders) {
                     headers = requestHeaders
@@ -96,26 +109,30 @@ class CucumberRest {
                 }
 
                 response.success = { resp, data ->
-                    def statusCode = resp.statusLine.statusCode
-                    binding.setVariable(RESPONSE_CODE_VARIABLE, statusCode)
-                    binding.setVariable(RESPONSE_VARIABLE, data)
-                    binding.setVariable(RESPONSE_HEADERS, resp.headers)
+                    storeHttpResponseInBinding(resp, data)
                 }
 
                 response.failure = { resp, data ->
-                    def statusCode = resp.statusLine.statusCode
-                    binding.setVariable(RESPONSE_CODE_VARIABLE, statusCode)
-                    binding.setVariable(RESPONSE_VARIABLE, data)
-                    binding.setVariable(RESPONSE_HEADERS, resp.headers)
+                    storeHttpResponseInBinding(resp, data)
                 }
             }
         } catch (ResponseParseException e) {
-            throw new Exception("Unable to ")
+            throw new Exception("Unable to parse the response, probably means it wasn't what is was supposed to be.  We expected to get $type", e)
         }
+    }
+
+    private void storeHttpResponseInBinding(resp, data) {
+        binding.setVariable(RESPONSE_CODE_VARIABLE, resp.statusLine.statusCode)
+        binding.setVariable(RESPONSE_VARIABLE, data)
+        binding.setVariable(RESPONSE_HEADERS, resp.headers)
     }
 
     public void loadRequest(def directory, def name, def slurper, def type) {
         binding.setVariable(REQUEST_VARIABLE, slurper.parseText(FileUtil.loadFileResource(name, directory)));
+        setRequestPayloadType(type)
+    }
+
+    public void setRequestPayloadType(def type){
         binding.setVariable(REQUEST_TYPE, type)
     }
 
@@ -123,7 +140,7 @@ class CucumberRest {
         if (!headerName && !value) {
             binding.setVariable(REQUEST_HEADERS_VARIABLE, null)
         } else {
-            if (!binding.hasVariable(REQUEST_HEADERS_VARIABLE)) {
+            if (!binding.hasVariable(REQUEST_HEADERS_VARIABLE) || binding.getVariable(REQUEST_HEADERS_VARIABLE) == null) {
                 binding.setVariable(REQUEST_HEADERS_VARIABLE, [:])
             }
 

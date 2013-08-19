@@ -1,5 +1,7 @@
 package com.wotifgroup.cucumber.rest
 
+import grails.plugin.cucumberrest.GrailsEndpointBindingUpdater
+
 class EndpointBindingUpdater {
 
     static final String LOAD = "load"
@@ -9,20 +11,34 @@ class EndpointBindingUpdater {
     static final String PUT = "put"
     static final String GET = "get"
     static final String DELETE = "delete"
+    static final String CUCUMBER_REST_BINDING_UPDATER = "cucumberRestBindingUpdater"
 
     Binding binding
-
     CucumberRest cucumberRest
-
     ResourceLoader resourceLoader
     PropertySetter propertySetter
     HeaderSetter headerSetter
 
     def httpActions = []
 
+    public static def initialize(def binding) {
+        def bindingUpdater
+        if (binding.hasVariable(CUCUMBER_REST_BINDING_UPDATER)) {
+            bindingUpdater = binding.getVariable(CUCUMBER_REST_BINDING_UPDATER)
+        } else {
+            if (GrailsEndpointBindingUpdater.isGrailsApplication()) {
+                bindingUpdater = new GrailsEndpointBindingUpdater(binding)
+            } else {
+                bindingUpdater = new EndpointBindingUpdater(binding)
+            }
+            bindingUpdater.initialize()
+        }
+        return bindingUpdater
+    }
+
     EndpointBindingUpdater(Binding binding) {
         this.binding = binding
-        this.binding.setVariable("cucumberRestBindingUpdater", this)
+        this.binding.setVariable(CUCUMBER_REST_BINDING_UPDATER, this)
         this.cucumberRest = new CucumberRest(binding)
     }
 
@@ -35,7 +51,7 @@ class EndpointBindingUpdater {
             binding.variables.remove(value)
         }
 
-        binding.variables.remove("cucumberRestBindingUpdater")
+        binding.variables.remove(CUCUMBER_REST_BINDING_UPDATER)
         this
     }
 

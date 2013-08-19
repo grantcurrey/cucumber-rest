@@ -52,19 +52,23 @@ Given(~'^I (remove|clear|nullify) the request \"(.*)\" property$') { String acti
     setProperty action, property
 }
 
-Then(~/^I post the "([\w ]+)" to "(.*)"/) { String type, String resource ->
+Then(~/^I post the "([\w ]+)" to "?([^"]*)"?/) { String type, String resource ->
     post resource
 }
 
-Then(~/^I get the "([\w ]+)" to "(.*)"/) { String type, String resource ->
+Then(~/^I call the "?([^"]*)"? resource/) {String resource ->
     get resource
 }
 
-Then(~/^I put the "([\w ]+)" to "(.*)"/) { String type, String resource ->
+Then(~/^I get the "([\w ]+)" to "?([^"]*)"?/) { String type, String resource ->
+    get resource
+}
+
+Then(~/^I put the "([\w ]+)" to "?([^"]*)"?/) { String type, String resource ->
     put resource
 }
 
-Then(~/^I delete the "([\w ]+)" to "(.*)"/) { String type, String resource ->
+Then(~/^I delete the "([\w ]+)" to "?([^"]*)"?/) { String type, String resource ->
     delete resource
 }
 
