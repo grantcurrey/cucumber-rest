@@ -61,7 +61,7 @@ class CucumberRest {
 
     public void doRequest(def methodString, def urlBase, String path) {
 
-        def pathVariableMatcher = path =~ /\{([a-zA-Z0-9_\.]*)\}/
+        def pathVariableMatcher = path =~ /\{([a-zA-Z0-9_\.\-]*)\}/
         pathVariableMatcher.each { match ->
             path = path.replace(match[0], ExpressionUtil.parseStringToType(match[1].toString(), dateFormat, binding))
         }
