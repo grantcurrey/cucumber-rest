@@ -123,6 +123,9 @@ Step definition Overview
 - ```I delete the "([\w ]+)" to "(.*)"```
 - ```the http response code is "([0-9]*)"```
 - ```the response code is "([0-9]*)"```
+- ```the response matches ("?.*"?)```
+- ```the response equals ("?.*"?)```
+- ```the response contains "?(.*)"?``` 
 - ```the response header property \"(.*)\" has a value```
 - ```the response header property \"(.*)\" is ("?.*"?)```
 - ```the response header property \"(.*)\" matches ("?.*"?)```
