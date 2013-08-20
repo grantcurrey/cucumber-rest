@@ -121,14 +121,13 @@ Step definition Overview
 - ```I call the "?([^"]*)"? resource``` - This is the same as the step above, only making more sense (GET)
 - ```I put the "([\w ]+)" to "(.*)"```
 - ```I delete the "([\w ]+)" to "(.*)"```
-- ```the http response code is "([0-9]*)"```
-- ```the response code is "([0-9]*)"```
+- ```the( http)? response code is "([0-9]*)"```
 - ```the response matches ("?.*"?)```
 - ```the response equals ("?.*"?)```
 - ```the response contains "?(.*)"?``` 
-- ```the response header property \"(.*)\" has a value```
-- ```the response header property \"(.*)\" is ("?.*"?)```
-- ```the response header property \"(.*)\" matches ("?.*"?)```
+- ```the response header \"(.*)\" has a value```
+- ```the response header \"(.*)\" is ("?.*"?)```
+- ```the response header \"(.*)\" matches ("?.*"?)```
 - ```the response (property|element) \"(.*)\" matches ("?.*"?)```
 - ```the response (property|element) \"(.*)\" has a value```
 - ```the response (property|element) "(.*)" equals ("?.*"?)```
