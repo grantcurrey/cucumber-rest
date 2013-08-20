@@ -16,6 +16,8 @@ Currently the library does not support XML, it supports JSON.  I plan to add XML
 Installation 
 =============
 
+The installation steps are required if you want to use the library with an applca
+
 ```bash
 git clone http://github.com/grantcurrey/cucumber-rest
 cd cucumber-rest
@@ -99,12 +101,15 @@ Step definition Overview
 - ```I put the "([\w ]+)" to "(.*)"```
 - ```I delete the "([\w ]+)" to "(.*)"```
 - ```the http response code is "([0-9]*)"```
+- ```the response code is "([0-9]*)"```
 - ```the response header property \"(.*)\" has a value```
-- ```the response header property \"(.*)\" is (\"?.*\"?)```
-- ```the response property \"(.*)\" has a value```
-- ```the response property "(.*)" equals ("?.*"?)```
-- ```the response property \"(.*)\" is (\"?.*\"?)```
-- ```the response property \"(.*)\" contains \"?(.*)\"?```
+- ```the response header property \"(.*)\" is ("?.*"?)```
+- ```the response header property \"(.*)\" matches ("?.*"?)```
+- ```the response (property|element) \"(.*)\" matches ("?.*"?)```
+- ```the response (property|element) \"(.*)\" has a value```
+- ```the response (property|element) "(.*)" equals ("?.*"?)```
+- ```the response (property|element) \"(.*)\" is ("?.*"?)```
+- ```the response (property|element) \"(.*)\" contains "?(.*)"?```
 
 DSL Explanation
 -----------------

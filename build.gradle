@@ -3,20 +3,24 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 
 group = 'com.wotifgroup.cucumber'
-version = '1.1.16'
+version = '1.1.17'
 
 repositories {
+    mavenCentral()
     mavenLocal()
-    mavenRepo name: 'Wotif Nexus', url: 'http://maven.dev.wotifgroup.com/content/groups/public'
+    //mavenRepo name: 'Wotif Nexus', url: 'http://maven.dev.wotifgroup.com/content/groups/public'
 }
 
 uploadArchives {
     repositories {
         mavenDeployer {
-	    repository(url: "http://maven.dev.wotifgroup.com/content/repositories/releases"){
-	    	authentication(userName: mavenUser, password: mavenPassword)
+            /*repository(url: "http://maven.dev.wotifgroup.com/content/repositories/releases"){
+                authentication(userName: mavenUser, password: mavenPassword)
+            }*/
+            repository(url: "https://raw.github.com/grantcurrey/cucumber-rest/mvn-repo"){
+                authentication(userName: mavenUser, password: mavenPassword)
+            }
 	    }
-	} 	
     }
 }
 
