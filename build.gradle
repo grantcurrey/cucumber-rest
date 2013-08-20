@@ -7,17 +7,14 @@ version = '1.1.17'
 
 repositories {
     mavenCentral()
+    mavenRepo name: 'Wotif Nexus', url: 'http://maven.dev.wotifgroup.com/content/groups/public'
     mavenLocal()
-    //mavenRepo name: 'Wotif Nexus', url: 'http://maven.dev.wotifgroup.com/content/groups/public'
 }
 
 uploadArchives {
     repositories {
         mavenDeployer {
-            /*repository(url: "http://maven.dev.wotifgroup.com/content/repositories/releases"){
-                authentication(userName: mavenUser, password: mavenPassword)
-            }*/
-            repository(url: "https://raw.github.com/grantcurrey/cucumber-rest/mvn-repo"){
+            repository(url: "http://maven.dev.wotifgroup.com/content/repositories/releases"){
                 authentication(userName: mavenUser, password: mavenPassword)
             }
 	    }

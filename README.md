@@ -16,7 +16,7 @@ Currently the library does not support XML, it supports JSON.  I plan to add XML
 Installation 
 =============
 
-The installation steps are required if you want to use the library with an applca
+The installation steps are required if you want to compile from sources.
 
 ```bash
 git clone http://github.com/grantcurrey/cucumber-rest
@@ -24,7 +24,28 @@ cd cucumber-rest
 gradle install
 ```
 
-In your project simply add the dependency ```"com.wotifgroup.cucumber-rest:cucumber-rest:0.2.2"```
+_Note_
+Although you will not upload anything with gradle install, it is likely to still complain about not being able to find
+the mavenUser and mavenPassword properties.  If this is the case, do the following:
+
+```bash
+echo "mavenUser=user" >> ~/.gradle/gradle.properties
+echo "mavenPassword=password" >> ~/.gradle/gradle.properties
+```
+
+Alternatively, you can use the binary version already published to maven by adding the following repository to your
+maven configuration:
+
+```xml
+<repositories>
+    <repository>
+        <id>grantcurrey-maven2</id>
+        <url>https://github.com/grantcurrey/maven2/raw/master/</url>
+    </repository>
+</repositories>
+```
+
+In your project simply add the dependency ```"com.wotifgroup.cucumber-rest:cucumber-rest:1.1.17"```
 
 Config / Usage
 ===============
