@@ -63,7 +63,7 @@ class CucumberRest {
 
         def pathVariableMatcher = path =~ /\{([a-zA-Z0-9_\.\-]*)\}/
         pathVariableMatcher.each { match ->
-            path = path.replace(match[0], ExpressionUtil.parseStringToType(match[1].toString(), dateFormat, binding))
+            path = path.replace(match[0] as String, ExpressionUtil.parseStringToType(match[1].toString(), dateFormat, binding) as String)
         }
 
         def http = new HTTPBuilder("${urlBase}${path}")

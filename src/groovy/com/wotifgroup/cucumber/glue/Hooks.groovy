@@ -7,11 +7,21 @@ import static cucumber.api.groovy.Hooks.Before
 
 def bindingUpdater
 
-Before('@cucumberRest','@endpoint') {
+Before('@cucumberRest') {
     bindingUpdater = EndpointBindingUpdater.initialize(binding)
 }
 
-After('@cucumberRest', '@endpoint') {
+Before('@endpoint') {
+    bindingUpdater = EndpointBindingUpdater.initialize(binding)
+}
+
+After('@cucumberRest') {
+    if (bindingUpdater) {
+        bindingUpdater.remove()
+    }
+}
+
+After('@endpoint') {
     if (bindingUpdater) {
         bindingUpdater.remove()
     }

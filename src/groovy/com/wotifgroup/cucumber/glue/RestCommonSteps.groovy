@@ -32,7 +32,7 @@ Given(~'^I am sending a \"(.*)\"$') { String json ->
     load json.replace(" ", "_") + ".json", ContentType.JSON
 }
 
-Given(~'^I clear( the)? request headers$') { String notUsed->
+Given(~'^I clear request headers$') {->
     setHeader null, null
 }
 
@@ -58,6 +58,10 @@ Then(~/^I post the "([\w ]+)" to "?([^"]*)"?/) { String type, String resource ->
 
 Then(~/^I call the "?([^"]*)"? resource/) { String resource ->
     get resource
+}
+
+Then(~/^I call the "?([^"]*)"? resource and get a (text|xml|json) response/) { String resource, String type ->
+    get resource, ContentType.valueOf(type.toUpperCase())type
 }
 
 Then(~/^I get the "([\w ]+)" to "?([^"]*)"?/) { String type, String resource ->
